@@ -1,0 +1,31 @@
+\begin{table}[htb]
+\centering
+\caption{Weights association using ENC2 where missing weights are set to one}
+\label{weightsEnc2}
+\begin{tabular}{rl}
+\hline
+\multicolumn{1}{c}{Weights} & \multicolumn{1}{c}{Value} \\ \hline
+W(\(\rho_{b1}\)) & 0.7 \\
+W(\(\neg\rho_{b1}\)) & 0.3 \\
+W(\(\rho_{e1}\)) & 0.01 \\
+W(\(\rho_{e2}\)) & 0.19/(1-0.01) = 0.19 \\
+W(\(\neg\rho_{e1}\)) & 1-0.01 = 0.99 \\
+W(\(\neg\rho_{e2}\)) & 1-0.01 = 0.81 \\
+W(\(\rho_{a1|b1,e1}\)) & 0.90 \\
+W(\(\neg\rho_{a1|b1,e1}\)) & 1-0.90=0.10 \\
+W(\(\rho_{a1|b1,e2}\)) & 0.85 \\
+\multicolumn{1}{l}{W(\(\neg\rho_{a1|b1,e2}\))} & 1-0.85=0.15 \\
+W(\(\rho_{a1|b1,e3}\)) & 0.80 \\
+W(\(\neg\rho_{a1|b1,e3}\)) & 1-0.80=0.20 \\
+W(\(\rho_{a1|b2,e1}\)) & 0.30 \\
+W(\(\neg\rho_{a1|b2,e1}\)) & 1-0.30=0.70 \\
+W(\(\rho_{a1|b2,e2}\)) & 0.10 \\
+W(\(\neg\rho_{a1|b2,e2}\)) & 1-0-10=0.90 \\
+W(\(\rho_{a1|b2,e3}\)) & 0 \\
+W(\(\neg\rho_{a1|b2,e3}\)) & 1-0=1 \\
+W(\(\rho_{j1|a1}\)) & 0.80 \\
+W(\(\neg\rho_{j1|a1}\)) & 1-0.80=0.20 \\
+W(\(\rho_{j1|a2}\)) & 0.10 \\
+W(\(\neg\rho_{j1|a2}\)) & 1-0.10=0.90
+\end{tabular}
+\end{table}
