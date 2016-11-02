@@ -3,4 +3,4 @@ This repo contains the different files used for the Probabilistic Programming to
 
 Refer to the below links for a specific document:
 
-  *[Inference SRL report](https://github.com/dapp1990/MastersThesis/blob/master/InferenceSRLReport/InferenceSRLReport.pdf)
+  *r [Inference SRL report](https://github.com/dapp1990/ProbabilisticProgramming/blob/master/InferenceSRLReport/InferenceSRLReport.pdf)
