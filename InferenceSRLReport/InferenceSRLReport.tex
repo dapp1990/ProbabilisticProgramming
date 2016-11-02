@@ -493,15 +493,14 @@
 % creates the second title. It will be ignored for other modes.
 \IEEEpeerreviewmaketitle
 
-\todo[inline]{proposal: change all e1,e2,e3 to eh,em,en}
-\todo[inline]{table III: for variable A, the bottom halve of the CNF rules should have \(\theta_a2\), not \(\theta_a1\) (copy paste mistake probably)}
-\todo[inline]{table IV: is this needed?  The A {<=>} B implicitly means A {=> B} and B {=>} A.}
-\todo[inline]{table IV: comma's are sometimes wrongly placed and there's a disjunction without an implication in the middle}
-\todo[inline]{table V: maybe add W(theta a2|b2,e3) = 1 just to cover everything?}
-\todo[inline]{table VII: what's the difference with table VI?}
-\todo[inline]{table VIII: W(not ro e2) = 1-0.19 = 0.81  (it currently says 1-0.01)}
-\todo[inline]{table VIII: I'm not sure if {W(ro e2) = 0.19/(1-0.01)} ; is it not just 0.19?  Because it's a parent node and does not have any conditionals.  I may be very worng on this; I'm not sure about this.}
-
+%todo Todo
+\todo[inline, author=Alex, color=green!40]{proposal: change all e1,e2,e3 to eh,em,en - D: I'd say let it like that to be consistence with the number indices of the other variables. I just add a small description about what is the meaning of each variable to be more precise}
+\todo[inline, author=Alex, color=green!40]{table IV: is this needed?  The A {<=>} B implicitly means A {=> B} and B {=>} A. D: I made this according to the ENC1 description of the paper, Since table cnfRepresentationEnc1 is in essence the same as enc1Encoding, I took off cnfRepresentationEnc1 from the table list}
+\todo[inline, author=Alex, color=green!40]{table V: maybe add W(theta a2|b2,e3) = 1 just to cover everything? - I guess it's not need it, otherwise we need also to add \(\lambda_{b1}=1,\lambda_{b1}=2,\lambda_{a1}=1,\lambda_{a2}=1,etc.\)}
+\todo[inline, author=Alex, color=green!40]{table VII: what's the difference with table VI? D: Actually they are the same, I wanted to explicitly note the CNF representation and the actual encoding but I ended up with the same tables. I took off table cnfRepresentationEnc1}
+\todo[inline, author=Alex, color=green!40]{table VIII: I'm not sure if {W(ro e2) = 0.19/(1-0.01)} ; is it not just 0.19?  Because it's a parent node and does not have any conditionals.  I may be very wrong on this; I'm not sure about this. - D: You are right, Earthquake is marginal independent of the others  (there is no conditional dependency such that P(E|SomeNodes)), I just wanted to be explicit according with the method described in the paper, we can always get rid of the "unseless" operation}
+\todo[inline, author=Daniel]{Not sure if the 6th clause of the network variable A in~\ref{enc1Encoding} is correctly substituted due to the property describe in the paper "Consider again Figure 1 and imagine that the parameter \(\theta{c1|a1}\) were 0. Given that this parameter is known to be 0, all models that set this parameter variable to true will have weight 0."}
+\todo[inline, author=Daniel]{For~\ref{enc2Encoding}, should we also chance the closure that contains a probability of 0, like we did in the ENC1 encoding? Look comment above}
 
 \section{Probabilistic Inference Using Weighted Model Counting}
     \subsection{PGM to CNF}
