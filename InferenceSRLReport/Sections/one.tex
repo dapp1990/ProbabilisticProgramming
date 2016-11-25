@@ -1,16 +1,30 @@
-Table~\ref{variableDescription} shows the semantics of the domain variables used for those tasks.
-\input{Tables/variableDescription}
+\section{Probabilistic Inference Using Weighted Model Counting}
+\subsection{PGM to CNF}
 
-Tables~\ref{logicalEnc1} and~\ref{logicalEnc2} show the logical variables used for encoding the Bayesian Network in~\cite{bayesian_network}.
+Table~\ref{variableDescription} shows the semantics of the domain variables used for those tasks.
+
+Tables~\ref{logicalEnc1} and~\ref{logicalEnc2} show the logical variables used for encoding the Bayesian Network.
+
+Table~\ref{cnfRepresentationEnc1} represents the encoded Bayesian Network using ENC1 and table~\ref{weightsEnc1} contains the corresponding weights.
+
+Likewise, table~\ref{cnfRepresentationEnc2} represents the encoded Bayesian Network using ENC2 and table~\ref{weightsEnc2} contains the corresponding weights.
+
+\input{Tables/variableDescription}
 \input{Tables/logicalEnc1}
 \input{Tables/logicalEnc2}
 
-Table~\ref{cnfRepresentationEnc1} represents the encoded Bayesian Network using ENC1 and table~\ref{weightsEnc1} contains the corresponding weights.
 %\input{Tables/cnfRepresentationEnc1}
 \input{Tables/cnfRepresentationEnc1}
 \input{Tables/weightsEnc1}
 
-Likewise, table~\ref{cnfRepresentationEnc2} represents the encoded Bayesian Network using ENC2 and table~\ref{weightsEnc2} contains the corresponding weights.
 %\input{Tables/cnfRepresentationEnc2}
 \input{Tables/cnfRepresentationEnc2}
 \input{Tables/weightsEnc2}
+
+
+\subsection{SRL to CNF}
+
+First the program must be grounded, while taking into account \textbf{Q} and \textbf{E}. In this case the evidence set \textbf{E} is empty (there is no evidence available). The grounding process of the queries will be described step-by-step in listings~\ref{lst:query15} and~\ref{lst:query16}.  If only \textbf{query(path(1,5))} was considered, then \textbf{edge(5,6)} and \textbf{edge(2,6)} would have been irrelevant. With the inclusion of \textbf{query(path(1,6))} all edges become relevant.
+
+\input{Listings/12_querygrounding}
+
