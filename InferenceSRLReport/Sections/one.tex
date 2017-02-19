@@ -13,11 +13,10 @@ Likewise, table~\ref{cnfRepresentationEnc2} represents the encoded Bayesian Netw
 \input{Tables/logicalEnc1}
 \input{Tables/logicalEnc2}
 
-%\input{Tables/cnfRepresentationEnc1}
 \input{Tables/cnfRepresentationEnc1}
 \input{Tables/weightsEnc1}
+\input{Tables/cnfRepresentationEnc1Expanded}
 
-%\input{Tables/cnfRepresentationEnc2}
 \input{Tables/cnfRepresentationEnc2}
 \input{Tables/weightsEnc2}
 
@@ -29,10 +28,20 @@ First the program must be grounded, while taking into account \textbf{Q} and \te
 
 \input{Listings/12_querygrounding}
 
-The second step is to find an equivalent CNF of the ground program. Given the grounded rules \mbox{\textbf{w :- r}} and \mbox{\textbf{w :- s}}, the equivalent CNF contains the following three clauses: $\neg r \lor w$, $\neg s \lor w$ and $\neg w \lor s \lor r$. In our case $r$ and $s$ both are conjunctions, so De Morgans law is used to write the first two clauses. For the last clause, all permutations of the combinations of the elements $\neg w$, $r$ and $s$ are considered. For \textbf{path(1,5)} this yields $2*3 = 6$ combinations. For \textbf{path(1,6)} there are $2*3*4 = 24$ combinations. The CNF is shown in table~\ref{table:12cnf}.
+The second step is to find an equivalent CNF of the ground program. Given the grounded rules \mbox{\textbf{w :- r}} and \mbox{\textbf{w :- s}}, the equivalent CNF contains the following three clauses: $\neg r \lor w$, $\neg s \lor w$ and $\neg w \lor s \lor r$. In our case $r$ and $s$ both are conjunctions, so De Morgans law is used to write the first two clauses. For the last clause, all permutations of the combinations of the elements $\neg w$, $r$ and $s$ are considered. For \textbf{path(1,5)} this yields $2*3 = 6$ combinations. For \textbf{path(1,6)} there are $2*3*4 = 24$ combinations. The CNF is shown in table~\ref{table:12cnf}. Note that on the last big block of $path_{16}$ that the \textit{and} operators can be removed, and the separate clauses can be listed underneath each other. We chose to use the current format because the resulting table would become too large (vertically) otherwise. It also clearly shows which clauses corresponds to the 24 combinations.
 
 \input{Tables/12_cnf}
 
 The final step is to obtain a weighted CNF. Since there's no evidence in our example, the CNF remains the same as shown in table~\ref{table:12cnf}. Table~\ref{table:12weight} displays the weighted literals. The weights for $path_{15}$, $path_{16}$, $\neg path_{15}$ and $\neg path_{16}$ equal 1 because they're defined in clauses. The weight of any world $\omega$ can be calculated as the product of the weight of all literals in $\omega$. For example, the world ${path_{15}, edge_{12}, edge_{25}, edge_{13}, edge_{34}, \neg edge_{45}}$ has the weight $0.6*0.4*0.1*0.3*0.2 = 0.00144$.
 
 \input{Tables/12_weights}
+
+
+\subsection{Weighted Model Counting}
+
+We used the following exact model counters: \textbf{MiniC2D}, \textbf{SDD} and \textbf{sharpSAT}.
+
+//TODO
+
+
+\subsection{Knowledge Compilation}
