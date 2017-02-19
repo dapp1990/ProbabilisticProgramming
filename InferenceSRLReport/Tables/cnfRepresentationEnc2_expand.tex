@@ -1,0 +1,14 @@
+\begin{table}[H]
+\centering
+\caption{CNF representation of Bayesian network using ENC2}
+\label{cnfRepresentationEnc2}
+\begin{tabular}{c|cl}
+\hline
+Variables & \multicolumn{2}{c}{CNF} \\ \hline
+B & \begin{tabular}[c]{@{}c@{}}\(\lambda_{b1} \lor \lambda_{b2}\)\\ \(\neg\lambda_{b1} \lor \neg\lambda_{b2}\)\end{tabular} & \begin{tabular}[c]{@{}l@{}}\(\neg\rho_{b1} \lor \lambda_{b1}\)\\ \(\rho_{b1} \lor \lambda_{b2}\)\end{tabular} \\ \hline
+E & \begin{tabular}[c]{@{}c@{}}\(\lambda_{e1} \lor \lambda_{e2} \lor \lambda_{e3}\)\\ \(\neg\lambda_{e1} \lor \neg\lambda_{e2}\)\\ \(\neg\lambda_{e1} \lor \neg\lambda_{e3}\)\\ \(\neg\lambda_{e2} \lor \neg\lambda_{e3}\)\end{tabular} & \begin{tabular}[c]{@{}l@{}}\(\neg\rho_{e1} \lor \lambda_{e1}\)\\ \(\rho_{e1} \lor \neg\rho_{e2} \lor \lambda_{e2}\)\\ \(\rho_{e1} \lor \rho_{e2} \lor \lambda_{e3}\)\end{tabular} \\ \hline
+A & \begin{tabular}[c]{@{}c@{}}\(\lambda_{a1} \lor \lambda_{a2}\)\\ \(\neg\lambda_{a1} \lor \neg\lambda_{a2}\)\end{tabular} & \begin{tabular}[c]{@{}l@{}}\(\neg\lambda_{b1} \lor \neg\lambda_{e1} \lor \neg\rho_{a1|b1,e1} \lor \lambda_{a1}\)\\ \(\neg\lambda_{b1} \lor \neg\lambda_{e2} \lor \neg\rho_{a1|b1,e2} \lor \lambda_{a1}\)\\ \(\neg\lambda_{b1} \lor \neg\lambda_{e3} \lor \neg\rho_{a1|b1,e3} \lor \lambda_{a1}\)\\ \(\neg\lambda_{b2} \lor \neg\lambda_{e1} \lor \neg\rho_{a1|b2,e1} \lor \lambda_{a1}\)\\ \(\neg\lambda_{b2} \lor \neg\lambda_{e2} \lor \neg\rho_{a1|b2,e2} \lor \lambda_{a1}\)\\ \(\neg\lambda_{b2} \lor \neg\lambda_{e3} \lor \neg\rho_{a1|b2,e3} \lor \lambda_{a1}\)\\ \(\neg\lambda_{b1} \lor \neg\lambda_{e1} \lor \rho_{a1|b1,e1} \lor \lambda_{a2}\)\\ \(\neg\lambda_{b1} \lor \neg\lambda_{e2} \lor \rho_{a1|b1,e2} \lor \lambda_{a2}\)\\ \(\neg\lambda_{b1} \lor \neg\lambda_{e3} \lor \rho_{a1|b1,e3} \lor \lambda_{a2}\)\\ \(\neg\lambda_{b2} \lor \neg\lambda_{e1} \lor \rho_{a1|b2,e1} \lor \lambda_{a2}\)\\ \(\neg\lambda_{b2} \lor \neg\lambda_{e2} \lor \rho_{a1|b2,e2} \lor \lambda_{a2}\)\\ \(\neg\lambda_{b2} \lor \neg\lambda_{e3} \lor \rho_{a1|b2,e3} \lor \lambda_{a2}\)\end{tabular} \\ \hline
+J & \begin{tabular}[c]{@{}c@{}}\(\lambda_{j1} \lor \lambda_{j2}\)\\ \(\neg\lambda_{j1} \lor \neg\lambda_{j2}\)\end{tabular} & \begin{tabular}[c]{@{}l@{}}\(\neg\lambda_{a1} \lor \neg\rho_{j1|a1} \lor \lambda_{j1}\)\\ \(\neg\lambda_{a2} \lor \neg\rho_{j1|a2} \lor \lambda_{j1}\)\\ \(\neg\lambda_{a1} \lor \rho_{j1|a1} \lor \lambda_{j2}\)\\ \(\neg\lambda_{a2} \lor \rho_{j1|a2} \lor \lambda_{j2}\)\end{tabular} \\ \hline
+M & \begin{tabular}[c]{@{}c@{}}\(\lambda_{m1} \lor \lambda_{m2}\)\\ \(\neg\lambda_{m1} \lor \neg\lambda_{m2}\)\end{tabular} & \begin{tabular}[c]{@{}l@{}}\(\neg\lambda_{a1} \lor \neg\rho_{m1|a1} \lor \lambda_{m1}\)\\ \(\neg\lambda_{a2} \lor \neg\rho_{m1|a2} \lor \lambda_{m1}\)\\ \(\neg\lambda_{a1} \lor \rho_{m1|a1} \lor \lambda_{m2}\)\\ \(\neg\lambda_{a2} \lor \rho_{m1|a2} \lor \lambda_{m2}\)\end{tabular}
+\end{tabular}
+\end{table}
