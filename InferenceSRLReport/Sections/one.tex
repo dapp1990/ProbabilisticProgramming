@@ -39,8 +39,25 @@ The final step is to obtain a weighted CNF. Since there's no evidence in our exa
 \subsection{Weighted Model Counting}
 
 We used the following exact model counters: \textbf{MiniC2D}, \textbf{SDD} and \textbf{sharpSAT}.
+\\[2ex]
+MiniC2D uses exhaustive DPLL, a backtracking based search algorithm to solve the \textit{boolean satisfiability problem}. It compiles CNFs into Decision-SDDs for the knowledge compilation, using a top-down approach. The top-down approach is considered to be faster by \textit{Umut Oztok and Adnan Darwiche}\cite{oztok2015top}. The Decision-SDDs are a subset of SDDs which facilitate the top-down compilation of SDDs.
+\\[2ex]
+The SDD program is similar to MiniC2D in the sense that it compiles CNFs into SDD datastructures. The shape of the SDD can be manipulated to improve efficiency, as will be explained in section~\ref{subsec:knowledgecompilation}.
+\\[2ex]
+sharpSAT also uses DPLL, but combines this with \textit{look ahead} technique that is based on \textit{boolean constraint propagation}~\cite{thurley2006sharpsat}. The look ahead technique eliminates more variables that can not be part of a solution, and thus reduces the search space to backtrack over.
+\\[2ex]
+Table~\ref{table:computationalrequirements} shows the computational requirements of each solver on the CNF from task 1, using encoding 1 and query \textbf{burglary}. There are 36 variables 94 clauses. \textit{The CNF encodings are included with our program.}
 
-//TODO
+\begin{table}[h]
+	\centering
+	\caption{Computational requirements.}
+	\label{table:computationalrequirements}
+	\begin{tabular}{l|l|l|l}
+		\textbf{}        & \textbf{miniC2D} & \textbf{SDD} & \textbf{sharpSAT} \\ \hline
+		\textbf{total runtime} &  0.019s  &   0.044s   &   0.008s  \\ \hline
+		\textbf{memory (cache size)}  &  0.011MB  &   0.3MB &   7MB  \\ \hline
+		\textbf{cache hit rate}  & 66.7\%  & 85.2\% &   100\%
+	\end{tabular}
+\end{table}
 
-
-\subsection{Knowledge Compilation}
+\subsection{Knowledge Compilation}\label{subsec:knowledgecompilation}
