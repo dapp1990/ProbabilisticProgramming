@@ -1,4 +1,5 @@
 import problog as pl
+from pipeline.probLogModels import Models
 
 
 def bayesianNetWork2ProbLog(bayesianNetwork):
@@ -20,10 +21,15 @@ def continue_pipeline(plProgram):
     cnf = getCNF(plProgram)
 
 
-def loadProbLog(probLog):
-    ProbLogProgram = pl.program.PrologString(probLog)
+def loadProbLog(probLogModel):
+    plProgram = pl.program.PrologString(probLogModel)
+    return plProgram
 
 
 def loadBayesianNetwork(bayesianNetwork):
-    ProbLogProgram = None # TODO
+    plProgram = None # TODO
 
+
+task11 = Models().task11()
+print(loadProbLog(task11))
+print(getCNF(loadProbLog(task11)))
