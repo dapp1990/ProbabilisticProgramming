@@ -1,7 +1,11 @@
-from pipeline.probLogModels import Models
+from pipeline.probLogPrograms import ProbLogProgram
 from pipeline.pipeline_body import Pipeline
 
 p = Pipeline()
-task11 = Models().task11()
-print(p.execProbLogModel(task11))
-print(p.getCNF(p.execProbLogModel(task11)))
+plp = ProbLogProgram()
+bn = "alarm.net"
+
+p.execBayesianNetwork(bn)
+
+#task11 = plp.task11()
+#p.execProbLogModel(task11)
