@@ -3,7 +3,7 @@ from pipeline.pipeline_body import Pipeline
 
 p = Pipeline()
 plp = ProbLogProgram()
-bn = "alarm.net"
+bn = ["alarm.net"]
 
 p.execBayesianNetwork(bn)
 

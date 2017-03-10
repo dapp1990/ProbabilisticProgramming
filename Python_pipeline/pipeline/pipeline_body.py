@@ -28,4 +28,5 @@ class Pipeline:
 
 
     def execBayesianNetwork(self, bayesianNetwork, inferenceEngine=None):
-        h2p.main()  # TODO
+        bayesianNetwork.append("-o output_" + bayesianNetwork[0]) # output to "output_<input_file_name>"
+        h2p.main(bayesianNetwork)
