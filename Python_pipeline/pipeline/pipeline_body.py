@@ -24,5 +24,8 @@ class Pipeline:
 
 
     def execBayesianNetwork(self, bayesianNetwork, inferenceEngine=None):
-        bayesianNetwork.append("-o output_" + bayesianNetwork[0]) # output to "output_<input_file_name>"
+        output_filename = "output_" + bayesianNetwork[0]  # output to "output_<input_file_name>"
+        bayesianNetwork.append("-o")
+        bayesianNetwork.append(output_filename)
         h2p.main(bayesianNetwork)
+        self.continue_pipeline(pl.program.PrologFile(output_filename), inferenceEngine)
