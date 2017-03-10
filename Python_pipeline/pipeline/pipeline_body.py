@@ -15,16 +15,12 @@ class Pipeline:
 
 
     def execProbLogModel(self, probLogProgram, inferenceEngine=None):
-        if (inferenceEngine is None):
-            p = probLogProgram[0]
-            if (probLogProgram[1] is not None):
-                p += probLogProgram[1]
-            if (probLogProgram[2] is not None):
-                p += probLogProgram[2]
-            self.continue_pipeline(pl.program.PrologString(p), None)
-        else:
-            None  # TODO
-            # lf = pl.engine.ground(plProgram[0],pl.formula.LogicFormula(),plProgram[2],plProgram[1])
+        p = probLogProgram[0]
+        if (probLogProgram[1] is not None):
+            p += probLogProgram[1]
+        if (probLogProgram[2] is not None):
+            p += probLogProgram[2]
+        self.continue_pipeline(pl.program.PrologString(p),inferenceEngine)
 
 
     def execBayesianNetwork(self, bayesianNetwork, inferenceEngine=None):
