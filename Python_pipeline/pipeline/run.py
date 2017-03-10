@@ -5,7 +5,7 @@ p = Pipeline()
 plp = ProbLogProgram()
 bn = ["alarm.net"]
 
-p.execBayesianNetwork(bn)
+# p.execBayesianNetwork(bn)
 
-#task11 = plp.task11()
-#p.execProbLogModel(task11)
+task11 = plp.task11()
+p.execProbLogModel(task11)
