@@ -1,3 +1,5 @@
+*.pyc
+*.pyo
 
 # Created by https://www.gitignore.io/api/pycharm
 
