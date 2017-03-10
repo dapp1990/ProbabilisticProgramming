@@ -1,5 +1,6 @@
 import problog as pl
 import pipeline.hugin2problog as h2p
+from subprocess import check_output
 
 
 class Pipeline:
@@ -11,7 +12,8 @@ class Pipeline:
             nnf = pl.nnf_formula.NNF.create_from(cnf)  # transform to nnf
             return nnf.evaluate()   # compute conditional probabilities
         else:  # use inference engine (miniC2D)
-            None #TODO
+            output = check_output([inferenceEngine, "-c", "../CNFs/11_enc1/11_enc1_no_evidence.cnf", "-W"])
+            return output.decode("utf-8")
 
 
     # Enter a ProbLog program as a tuple: (model, evidence, queries)

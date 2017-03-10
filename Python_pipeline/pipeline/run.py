@@ -13,4 +13,6 @@ plp = ProbLogProgram()
 
 task11 = plp.task11()
 result = p.execProbLogModel(task11)
-print(result)
+print(result)  # contains conditional proabilities
+result2 = p.execProbLogModel(task11, miniC2D_exec_path)
+print(result2)  # contains miniC2D statistical output
