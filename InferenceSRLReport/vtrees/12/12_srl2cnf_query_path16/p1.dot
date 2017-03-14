@@ -1,0 +1,37 @@
+
+digraph vtree {
+
+overlap=false
+
+n1 [label="vt1
+5
+{}",shape="ellipse"]; 
+n3 [label="vt3
+6
+{1,2,8,9,14,15,20,21,22,23,24,25,26,27}",shape="ellipse"]; 
+n5 [label="vt5
+8
+{1,2,8,9,14,15,20,21,22,23,24,25,26,27,3,4,5,6,10,11,12,16,17,18}",shape="ellipse"]; 
+n7 [label="vt7
+7
+{1,2,8,9,14,15,20,21,22,23,24,25,26,27,3,4,5,6,10,11,12,16,17,18,7,13,19}",shape="ellipse"]; 
+n9 [label="vt9
+1
+{1,2,8,9,14,15,20,21,22,23,24,25,26,27,3,4,5,6,10,11,12,16,17,18,7,13,19}",shape="ellipse"]; 
+n11 [label="vt11
+4
+{1,8,9,14,15,20,21,4,5,6,10,11,12,16,17,18,7,13,19}",shape="ellipse"]; 
+n13 [label="vt13
+2
+{1,8,9,14,15,4,5,6,10,11,12,7,13}",shape="ellipse"]; 
+n14 [label="3",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n1->n3 [arrowhead=none];
+n3->n5 [arrowhead=none];
+n5->n7 [arrowhead=none];
+n7->n9 [arrowhead=none];
+n9->n11 [arrowhead=none];
+n11->n13 [arrowhead=none];
+n13->n14 [arrowhead=none];
+
+
+}

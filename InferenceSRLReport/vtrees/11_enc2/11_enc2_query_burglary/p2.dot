@@ -1,0 +1,101 @@
+
+digraph vtree {
+
+overlap=false
+
+n1 [label="vt1
+21
+{}",shape="ellipse"]; 
+n3 [label="vt3
+22
+{32,33,34,35}",shape="ellipse"]; 
+n5 [label="vt5
+17
+{34,35,36,37}",shape="ellipse"]; 
+n7 [label="vt7
+18
+{34,35,36,37,26,27,28,29}",shape="ellipse"]; 
+n9 [label="vt9
+24
+{34,35,36,37,28,29,30,31}",shape="ellipse"]; 
+n11 [label="vt11
+10
+{34,35,36,37,28,29,30,31}",shape="ellipse"]; 
+n13 [label="vt13
+20
+{34,36,28,29,30,31,12,13,20,21,22,23,24,25}",shape="ellipse"]; 
+n15 [label="vt15
+9
+{34,36,28,30,12,13,20,21,22,23,24,25}",shape="ellipse"]; 
+n17 [label="vt17
+19
+{34,36,28,30,20,21,22,23,24,25,14,15,16,17,18,19}",shape="ellipse"]; 
+n19 [label="vt19
+23
+{34,36,20,21,22,23,24,25,14,15,16,17,18,19}",shape="ellipse"]; 
+n21 [label="vt21
+8
+{20,21,22,23,24,25,14,15,16,17,18,19}",shape="ellipse"]; 
+n23 [label="vt23
+7
+{20,21,22,23,24,25,14,15,16,17,18,19,10,11}",shape="ellipse"]; 
+n25 [label="vt25
+6
+{20,21,22,23,24,25,14,15,16,17,18,19,10,11,9}",shape="ellipse"]; 
+n27 [label="vt27
+5
+{20,21,22,23,24,25,14,15,16,17,18,19,10,9,5,7,8}",shape="ellipse"]; 
+n29 [label="vt29
+4
+{20,21,22,23,24,25,14,15,16,17,18,19,9,5,7,6}",shape="ellipse"]; 
+n31 [label="vt31
+14
+{20,21,22,23,24,25,14,15,16,17,18,19}",shape="ellipse"]; 
+n33 [label="vt33
+15
+{20,21,22,23,24,25,14,15,16,17,18,19}",shape="ellipse"]; 
+n35 [label="vt35
+16
+{20,21,22,23,24,25,14,15,16,17,18,19}",shape="ellipse"]; 
+n37 [label="vt37
+2
+{20,21,22,23,24,25,14,15,16,17,18,19}",shape="ellipse"]; 
+n39 [label="vt39
+3
+{20,21,22,14,15,16,1,2,4}",shape="ellipse"]; 
+n41 [label="vt41
+11
+{20,21,22,14,15,16,1,2,3}",shape="ellipse"]; 
+n43 [label="vt43
+12
+{20,21,22,14,15,16,1,2,3}",shape="ellipse"]; 
+n45 [label="vt45
+1
+{20,21,22,14,15,16,1,2,3}",shape="ellipse"]; 
+n46 [label="13",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n1->n3 [arrowhead=none];
+n3->n5 [arrowhead=none];
+n5->n7 [arrowhead=none];
+n7->n9 [arrowhead=none];
+n9->n11 [arrowhead=none];
+n11->n13 [arrowhead=none];
+n13->n15 [arrowhead=none];
+n15->n17 [arrowhead=none];
+n17->n19 [arrowhead=none];
+n19->n21 [arrowhead=none];
+n21->n23 [arrowhead=none];
+n23->n25 [arrowhead=none];
+n25->n27 [arrowhead=none];
+n27->n29 [arrowhead=none];
+n29->n31 [arrowhead=none];
+n31->n33 [arrowhead=none];
+n33->n35 [arrowhead=none];
+n35->n37 [arrowhead=none];
+n37->n39 [arrowhead=none];
+n39->n41 [arrowhead=none];
+n41->n43 [arrowhead=none];
+n43->n45 [arrowhead=none];
+n45->n46 [arrowhead=none];
+
+
+}

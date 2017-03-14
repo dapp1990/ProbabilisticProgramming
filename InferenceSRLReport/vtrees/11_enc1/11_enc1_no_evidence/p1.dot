@@ -1,0 +1,159 @@
+
+digraph vtree {
+
+overlap=false
+
+n1 [label="vt1
+6
+{}",shape="ellipse"]; 
+n3 [label="vt3
+12
+{7,8,10,13,14,23,26,35,38,47,50,59,62}",shape="ellipse"]; 
+n5 [label="vt5
+11
+{7,8,10,13,14,23,26,35,38,47,50,59,62,17,18,43,44,48,51,52,55,56,60,63,64,72,74,78,80,86,88,92,94}",shape="ellipse"]; 
+n7 [label="vt7
+7
+{7,8,10,13,14,23,26,35,38,47,50,59,62,43,44,48,51,52,55,56,60,63,64,72,74,78,80,86,88,92,94,19,20,24,27,28,31,32,36,39,40,69,71,75,77,83,85,89,91}",shape="ellipse"]; 
+n9 [label="vt9
+1
+{7,8,13,14,23,26,35,38,47,50,59,62,43,44,48,51,52,55,56,60,63,64,72,74,78,80,86,88,92,94,19,20,24,27,28,31,32,36,39,40,69,71,75,77,83,85,89,91,9,15,16,30,42,54,66}",shape="ellipse"]; 
+n37 [label="vt37
+{7,8,13,14,23,26,35,38,47,50,59,62,43,44,48,51,52,55,56,60,63,64,72,74,78,80,86,88,92,94,19,20,24,27,28,31,32,36,39,40,69,71,75,77,83,85,89,91,9,15,16,30,42,54,66,1,2,3,4,21,25,29,45,49,53}",shape="box"]; 
+n11 [label="vt11
+2
+{7,8,13,14,35,38,47,50,59,62,43,44,48,55,56,60,63,64,19,20,31,32,36,39,40,9,42,66,1,2,21,45,49}",shape="ellipse"]; 
+n21 [label="vt21
+{7,8,13,14,35,38,47,50,59,62,43,44,48,55,56,60,63,64,19,20,31,32,36,39,40,9,42,66,21,45,49,5,6,33,37,41,57,61,65}",shape="box"]; 
+n17 [label="vt17
+{35,38,47,50,48,63,64,36,39,40,42,66,49,5,6,37,41,65}",shape="box"]; 
+n13 [label="vt13
+20
+{47,50,48,39,40,42,49,5,6,41}",shape="ellipse"]; 
+n15 [label="vt15
+18
+{39,40,42,5,6,41}",shape="ellipse"]; 
+n16 [label="4",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n19 [label="vt19
+17
+{35,38,63,64,36,66,37,65}",shape="ellipse"]; 
+n20 [label="24",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n23 [label="vt23
+5
+{7,8,13,14,59,62,43,44,55,56,60,19,20,31,32,9,21,45,33,57,61}",shape="ellipse"]; 
+n29 [label="vt29
+{13,14,59,62,43,44,55,56,60,19,20,31,32,21,45,33,57,61,11,12,22,34,46,58}",shape="box"]; 
+n25 [label="vt25
+16
+{13,14,59,62,60,31,32,33,61,34}",shape="ellipse"]; 
+n27 [label="vt27
+23
+{13,14,59,62,60,61}",shape="ellipse"]; 
+n28 [label="9",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n33 [label="vt33
+{43,44,55,56,19,20,21,45,57,11,12,22,46,58}",shape="box"]; 
+n31 [label="vt31
+13
+{19,20,21,11,12,22}",shape="ellipse"]; 
+n32 [label="8",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n35 [label="vt35
+19
+{43,44,55,56,45,57,46,58}",shape="ellipse"]; 
+n36 [label="22",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n53 [label="vt53
+{23,26,51,52,72,74,78,80,86,88,92,94,24,27,28,69,71,75,77,83,85,89,91,15,16,30,54,3,4,25,29,53}",shape="box"]; 
+n41 [label="vt41
+{51,52,86,88,92,94,83,85,89,91,15,16,54,53}",shape="box"]; 
+n39 [label="vt39
+10
+{51,52,15,16,54,53}",shape="ellipse"]; 
+n40 [label="21",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n43 [label="vt43
+32
+{86,88,92,94,83,85,89,91}",shape="ellipse"]; 
+n49 [label="vt49
+{86,88,92,94,83,85,89,91,81,82,90,93}",shape="box"]; 
+n45 [label="vt45
+31
+{86,88,83,85,81,82}",shape="ellipse"]; 
+n47 [label="vt47
+33
+{86,88,83,85,84,87}",shape="ellipse"]; 
+n48 [label="34",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n51 [label="vt51
+36
+{92,94,89,91,90,93}",shape="ellipse"]; 
+n52 [label="35",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n59 [label="vt59
+{23,26,72,74,78,80,24,27,28,69,71,75,77,30,3,4,25,29}",shape="box"]; 
+n55 [label="vt55
+15
+{23,26,24,27,28,30,3,4,25,29}",shape="ellipse"]; 
+n57 [label="vt57
+14
+{23,26,24,3,4,25}",shape="ellipse"]; 
+n58 [label="3",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n61 [label="vt61
+26
+{72,74,78,80,69,71,75,77}",shape="ellipse"]; 
+n65 [label="vt65
+{72,74,78,80,69,71,75,77,67,68,76,79}",shape="box"]; 
+n63 [label="vt63
+30
+{78,80,75,77,76,79}",shape="ellipse"]; 
+n64 [label="29",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n67 [label="vt67
+25
+{72,74,69,71,67,68}",shape="ellipse"]; 
+n69 [label="vt69
+27
+{72,74,69,71,70,73}",shape="ellipse"]; 
+n70 [label="28",fontname="Times-Italic",fontsize=14,shape=plaintext,fixedsize=true,width=.25,height=.25]; 
+n1->n3 [arrowhead=none];
+n3->n5 [arrowhead=none];
+n5->n7 [arrowhead=none];
+n7->n9 [arrowhead=none];
+n9->n37 [arrowhead=none];
+n37->n11 [arrowhead=none];
+n11->n21 [arrowhead=none];
+n21->n17 [arrowhead=none];
+n17->n13 [arrowhead=none];
+n13->n15 [arrowhead=none];
+n15->n16 [arrowhead=none];
+n17->n19 [arrowhead=none];
+n19->n20 [arrowhead=none];
+n21->n23 [arrowhead=none];
+n23->n29 [arrowhead=none];
+n29->n25 [arrowhead=none];
+n25->n27 [arrowhead=none];
+n27->n28 [arrowhead=none];
+n29->n33 [arrowhead=none];
+n33->n31 [arrowhead=none];
+n31->n32 [arrowhead=none];
+n33->n35 [arrowhead=none];
+n35->n36 [arrowhead=none];
+n37->n53 [arrowhead=none];
+n53->n41 [arrowhead=none];
+n41->n39 [arrowhead=none];
+n39->n40 [arrowhead=none];
+n41->n43 [arrowhead=none];
+n43->n49 [arrowhead=none];
+n49->n45 [arrowhead=none];
+n45->n47 [arrowhead=none];
+n47->n48 [arrowhead=none];
+n49->n51 [arrowhead=none];
+n51->n52 [arrowhead=none];
+n53->n59 [arrowhead=none];
+n59->n55 [arrowhead=none];
+n55->n57 [arrowhead=none];
+n57->n58 [arrowhead=none];
+n59->n61 [arrowhead=none];
+n61->n65 [arrowhead=none];
+n65->n63 [arrowhead=none];
+n63->n64 [arrowhead=none];
+n65->n67 [arrowhead=none];
+n67->n69 [arrowhead=none];
+n69->n70 [arrowhead=none];
+
+
+}
