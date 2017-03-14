@@ -91,11 +91,11 @@ Table~\ref{table:comptask1enc1} to table~\ref{table:comptask2} show the computat
 
 We use \textbf{MiniC2D} as tool for this section.
 \\[2ex]
-We tested different scenarios for the first two CNF file (with evidence, no evidence and some queries). Likewise we tested the CNF constructed in section 2 separately, considering the grounded queries for path 1-5 and 1-6.
+We tested different scenarios for the first two CNFs (with evidence, no evidence and some queries). Likewise we tested the CNFs constructed in section 2 separately, considering the grounded queries for path 1-5 and 1-6.
 \\[2ex]
-Table~\ref{vtree_11_enc1_no_evidence} to table~\ref{vtree_12_srl2cnf_query_path16} show the results of the different experiments. According with those, the best heuristic that gave us the most compact circuit is the natural elimination order method with incidence graph type, even though natural elimination order method with primal graph type gave the fastest result. This pattern is consistent in all the experiments were done.
+Table~\ref{vtree_11_enc1_no_evidence} to table~\ref{vtree_12_srl2cnf_query_path16} show the results of the different experiments. According with them, the best heuristic that gave us the most compact circuit was the natural elimination order method with incidence graph type, even though natural elimination order method with primal graph type showed the fastest results strictly speaking. However it is only a difference of 0.001s in some CNFs, even in the others it was no difference. This pattern is consistent in all the experiments were done.
 \\[2ex]
-The final conclusion is that natural elimination order method with incidence graph type would work better with DPLL because can increase the inference process due to the small circuit of the vtree. This would pay off the extra time that is needed to construct it compared to primal graph.
+The final conclusion is that natural elimination order method with incidence graph type would work better with DPLL because can increase the inference process due to the small circuit of the vtree and the virtually same time with the primal graph type.
 
 \input{Tables/vtree_11_enc1_no_evidence}
 \input{Tables/vtree_11_enc1_query_burglary}
