@@ -9,37 +9,26 @@ p = Pipeline()
 plp = ProbLogProgram()
 
 
-def runTask11():
-    task11 = plp.task11()
+def runTask(task):
     print("===================  problog  ===========================")
-    result = p.execProbLogModel(task11)
+    result = p.execProbLogModel(task)
     print(result)  # contains conditional proabilities
     print("\n\n===================  miniC2D  ===========================")
-    result = p.execProbLogModel(task11, miniC2D_exec_path)
+    result = p.execProbLogModel(task, miniC2D_exec_path)
     for r in result:
-        None #print(r)
+        print(r)
+
+
+def runTask11():
+    runTask(plp.task11())
 
 
 def runTask12():
-    task12 = plp.task12()
-    print("===================  problog  ===========================")
-    result = p.execProbLogModel(task12)
-    print(result)  # contains conditional proabilities
-    print("\n\n===================  miniC2D  ===========================")
-    result = p.execProbLogModel(task12, miniC2D_exec_path)
-    for r in result:
-        print(r)
+    runTask(plp.task12())
 
 
 def runTask23():
-    task23 = plp.task23()
-    print("===================  problog  ===========================")
-    result = p.execProbLogModel(task23)
-    print(result)  # contains conditional proabilities
-    print("\n\n===================  miniC2D  ===========================")
-    result = p.execProbLogModel(task23, miniC2D_exec_path)
-    for r in result:
-        print(r)
+    runTask(plp.task23())
 
 
 def runBigBayesianNetwork():
