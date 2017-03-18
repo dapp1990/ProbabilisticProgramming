@@ -7,6 +7,7 @@ class Pipeline:
 
     def continue_pipeline(self, plProgram, inferenceEngine):
         lf = pl.formula.LogicFormula.create_from(plProgram)  # ground into logic formula
+        print(lf)
         cnf = pl.cnf_formula.CNF.create_from(lf)     # get CNF
         if inferenceEngine is None:  # use problog to solve
             nnf = pl.nnf_formula.NNF.create_from(cnf)  # transform to nnf
@@ -22,9 +23,19 @@ class Pipeline:
         p = probLogProgram[0]
         if (probLogProgram[1] is not None):
             p += probLogProgram[1]
-        if (probLogProgram[2] is not None):
-            p += probLogProgram[2]
-        return self.continue_pipeline(pl.program.PrologString(p),inferenceEngine)
+        if inferenceEngine is None:  # run all queries at once with Problog
+            for query in probLogProgram[2]:
+                p += query + "\n"
+            return self.continue_pipeline(pl.program.PrologString(p),inferenceEngine)
+        else:  # run queries one at a time for other inference engines
+            result = []
+            result.append(self.continue_pipeline(pl.program.PrologString(p), inferenceEngine))
+            for query in probLogProgram[2]:
+                new_p = p
+                new_p += query
+                result.append(self.continue_pipeline(pl.program.PrologString(new_p),inferenceEngine))
+            return result
+
 
     # Enter the relative path to a Bayesian network file (.net extension)
     def execBayesianNetwork(self, bayesianNetwork, inferenceEngine=None):
@@ -32,7 +43,12 @@ class Pipeline:
         bayesianNetwork.append("-o")
         bayesianNetwork.append(output_filename)
         h2p.main(bayesianNetwork)
+
+        #with open(output_filename, "a") as myfile:
+        #    myfile.write(" query(hREKG(\"LOW\")).");
+
         return self.continue_pipeline(pl.program.PrologFile(output_filename), inferenceEngine)
+
 
     # Create a temporal cnf file which is used by minic2d
     def createFile(self, cnf):
@@ -50,6 +66,10 @@ class Pipeline:
                 str_weight += "0 1 "
             elif i in cnf.get_weights():
                 temp = str(cnf.get_weights()[i])
+                if temp == "True":
+                    temp = "1"
+                elif temp == "False":
+                    temp = "0"
                 complement = 1 - float(temp)
                 str_weight += temp + " " + str(complement) + " "
             else:

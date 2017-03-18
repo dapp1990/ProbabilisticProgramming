@@ -22,10 +22,7 @@ class ProbLogProgram:
                         evidence(calls(john),true).
                         evidence(calls(mary),true).
                    """
-        queries = """
-                        query(burglary).
-                        query(earthquake(_)).
-                  """
+        queries = ["query(burglary).", "query(earthquake(heavy)).", "query(earthquake(mild)).", "query(earthquake(none))."]
         return (model, evidence, queries)
 
 
@@ -46,10 +43,7 @@ class ProbLogProgram:
                 """
 
         evidence = None
-        queries = """
-                        query(path(1,5)).
-                        query(path(1,6)).
-                  """
+        queries = ["query(path(1,5)).", "query(path(1,6))."]
         return (model, evidence, queries)
 
 
@@ -78,7 +72,5 @@ class ProbLogProgram:
                         evidence(data(c1,[h,h,h,h,h,h,h,h,h,h,h,h,h]),true).
                         evidence(data(c2,[h,t,h,h,h,h,h,t,t,h,t,t,h]),true).
                    """
-        queries = """
-                        query(weight(C,X)) :- coin(C),param(X).
-                  """
+        queries = ["query(weight(C,X)) :- coin(C),param(X)."]
         return (model, evidence, queries)
