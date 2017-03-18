@@ -17,7 +17,7 @@ def runTask11():
     print("\n\n===================  miniC2D  ===========================")
     result = p.execProbLogModel(task11, miniC2D_exec_path)
     for r in result:
-        print(r)
+        None #print(r)
 
 
 def runTask12():
@@ -53,5 +53,4 @@ def runBigBayesianNetwork():
         print(r)
 
 
-
-runTask11()
+runTask23()

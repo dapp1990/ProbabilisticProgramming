@@ -7,15 +7,28 @@ class Pipeline:
 
     def continue_pipeline(self, plProgram, inferenceEngine):
         lf = pl.formula.LogicFormula.create_from(plProgram)  # ground into logic formula
+        e = lf.evidence()  # list of evidences
+        q = lf.labeled()  # list of queries
+        w = lf.get_weights()  # list of weights
         print(lf)
-        cnf = pl.cnf_formula.CNF.create_from(lf)     # get CNF
-        if inferenceEngine is None:  # use problog to solve
+
+        if inferenceEngine is None:  # run all queries at once with Problog
+            cnf = pl.cnf_formula.CNF.create_from(lf)  # get CNF
             nnf = pl.nnf_formula.NNF.create_from(cnf)  # transform to nnf
-            return nnf.evaluate()   # compute conditional probabilities
-        else:  # use inference engine (miniC2D)
-            self.createFile(cnf)
-            output = check_output([inferenceEngine, "-c", "temp.cnf", "-W", "--vtree_type", "i", "--vtree_method", "2"])
-            return output.decode("utf-8")
+            return nnf.evaluate()  # compute conditional probabilities
+        else:  # run queries one at a time for other inference engines
+            result = []
+            for query in q:
+                print("-----------------------------")
+                print(query)
+                lf.clear_queries()
+                lf.add_query(query[0],query[1])
+                cnf = pl.cnf_formula.CNF.create_from(lf)  # get CNF
+                self.createFile(cnf)
+                output = check_output([inferenceEngine, "-c", "temp.cnf", "-W", "--vtree_type", "i", "--vtree_method", "2"])
+                something = output.decode("utf-8")
+                result.append(something)
+            return result
 
 
     # Enter a ProbLog program as a tuple: (model, evidence, queries)
@@ -23,18 +36,10 @@ class Pipeline:
         p = probLogProgram[0]
         if (probLogProgram[1] is not None):
             p += probLogProgram[1]
-        if inferenceEngine is None:  # run all queries at once with Problog
+        if probLogProgram[2] is not None:
             for query in probLogProgram[2]:
-                p += query + "\n"
-            return self.continue_pipeline(pl.program.PrologString(p),inferenceEngine)
-        else:  # run queries one at a time for other inference engines
-            result = []
-            result.append(self.continue_pipeline(pl.program.PrologString(p), inferenceEngine))
-            for query in probLogProgram[2]:
-                new_p = p
-                new_p += query
-                result.append(self.continue_pipeline(pl.program.PrologString(new_p),inferenceEngine))
-            return result
+                p+= query + "\n"
+        return self.continue_pipeline(pl.program.PrologString(p), inferenceEngine)
 
 
     # Enter the relative path to a Bayesian network file (.net extension)
@@ -44,8 +49,8 @@ class Pipeline:
         bayesianNetwork.append(output_filename)
         h2p.main(bayesianNetwork)
 
-        #with open(output_filename, "a") as myfile:
-        #    myfile.write(" query(hREKG(\"LOW\")).");
+        with open(output_filename, "a") as myfile:
+            myfile.write(" query(hREKG(\"LOW\")).");
 
         return self.continue_pipeline(pl.program.PrologFile(output_filename), inferenceEngine)
 
