@@ -42,4 +42,4 @@ def runBigBayesianNetwork():
         print(r)
 
 
-runTask23()
+runTask12()

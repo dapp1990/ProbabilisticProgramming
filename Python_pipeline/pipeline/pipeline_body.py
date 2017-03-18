@@ -11,6 +11,7 @@ class Pipeline:
         q = lf.labeled()  # list of queries
         w = lf.get_weights()  # list of weights
         print(lf)
+        print(w)
 
         if inferenceEngine is None:  # run all queries at once with Problog
             cnf = pl.cnf_formula.CNF.create_from(lf)  # get CNF
@@ -23,6 +24,7 @@ class Pipeline:
                 print(query)
                 lf.clear_queries()
                 lf.add_query(query[0],query[1])
+                print(lf)
                 cnf = pl.cnf_formula.CNF.create_from(lf)  # get CNF
                 self.createFile(cnf)
                 output = check_output([inferenceEngine, "-c", "temp.cnf", "-W", "--vtree_type", "i", "--vtree_method", "2"])
@@ -72,11 +74,12 @@ class Pipeline:
             elif i in cnf.get_weights():
                 temp = str(cnf.get_weights()[i])
                 if temp == "True":
-                    temp = "1"
+                    temp = 1.00
                 elif temp == "False":
-                    temp = "0"
-                complement = 1 - float(temp)
-                str_weight += temp + " " + str(complement) + " "
+                    temp = 0.00
+                complement = 1.00 - float(temp)
+                complement = round(complement, 2)
+                str_weight += str(temp) + " " + str(complement) + " "
             else:
                 str_weight += "1 1 "
 
