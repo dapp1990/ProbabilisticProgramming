@@ -10,7 +10,7 @@ class Pipeline:
         e = lf.evidence()  # list of evidences
         q = lf.labeled()  # list of queries
         w = lf.get_weights()  # list of weights
-        print(lf)
+        #print(lf)
         print(w)
 
         if inferenceEngine is None:  # run all queries at once with Problog
@@ -24,11 +24,20 @@ class Pipeline:
                 print(query)
                 lf.clear_queries()
                 lf.add_query(query[0],query[1])
-                print(lf)
                 cnf = pl.cnf_formula.CNF.create_from(lf)  # get CNF
+
+                #text_file = open("temp.cnf", "w")
+                #text_file.write(cnf.to_dimacs(weighted=True))
+                #text_file.close()
+                print("-HEEEEEEEEEEEEERE")
+                print(cnf.get_weights())
+
+
                 self.createFile(cnf)
+                #print(lf)
                 output = check_output([inferenceEngine, "-c", "temp.cnf", "-W", "--vtree_type", "i", "--vtree_method", "2"])
                 something = output.decode("utf-8")
+                print(something)
                 result.append(something)
             return result
 
@@ -62,6 +71,10 @@ class Pipeline:
         limit = cnf.atomcount + 1
         str_weight = "c weights "
 
+        # pl.evaluator.Evaluator
+        print(cnf.get_names_with_label())
+        print(cnf.evidence())
+        print(cnf.labeled())
         for i in range(1, limit):
             if i in (x[1] for x in cnf.evidence()):
                 str_weight += "1 0 "
@@ -74,9 +87,8 @@ class Pipeline:
             elif i in cnf.get_weights():
                 temp = str(cnf.get_weights()[i])
                 if temp == "True":
-                    temp = 1.00
-                elif temp == "False":
-                    temp = 0.00
+                    str_weight += "1 1 "
+                    continue
                 complement = 1.00 - float(temp)
                 complement = round(complement, 2)
                 str_weight += str(temp) + " " + str(complement) + " "
