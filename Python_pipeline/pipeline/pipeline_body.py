@@ -10,7 +10,7 @@ class Pipeline:
         e = lf.evidence()  # list of evidences
         q = lf.labeled()  # list of queries
         w = lf.get_weights()  # list of weights
-        #print(lf)
+        print(lf)
         print(w)
 
         if inferenceEngine is None:  # run all queries at once with Problog
