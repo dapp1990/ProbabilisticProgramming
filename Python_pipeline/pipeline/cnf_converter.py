@@ -1,7 +1,7 @@
 from pipeline.variable import Variable
 from pipeline.probLogPrograms import ProbLogProgram
 import re
-import problog
+import itertools
 from subprocess import check_output
 
 
@@ -92,8 +92,19 @@ class CNFConverter():
         for (header,body) in remaining_lines:
             print("START iteration")
             #print(header + "   " + str(body))
-            body = self.recursiveReplaceBody([body])[0]
             print(body)
+            #body = self.recursiveReplaceBody([body])[0]
+            body = self.recursiveReplaceBody2(body)
+
+            print("FINAL RESULT")
+            print(body)
+
+            test = itertools.product(*body)
+            print("============= PRODUCT")
+            for t in test:
+                None#print(t)
+            print("=============")
+
             split_clauses_list = []
             self.splitClauses(body,split_clauses_list)
 
@@ -115,16 +126,65 @@ class CNFConverter():
                     temp_clause_dict[name] = [(body,rho)]
 
 
+    #TODO clues:
+    """
+    1) first body (main call) is always of the form [[a,b,...]]
+    2) , means and for first method call (and any body parameter of len 1)
+    2b) any body parameter with len > 1 means that there are multiple clauses for a given variable and needs to branch off
+    *) possibly construct tree here
+    """
     def recursiveReplaceBody(self,body):
+        print("body")
+        print(body)
         new_body = []
         for outer_body_part in body:
             new_inner_body = []
             for body_part in outer_body_part:
                 if body_part in self.clauseDictionary:
-                    new_inner_body.extend(self.recursiveReplaceBody(self.clauseDictionary[body_part]))
+                    result = self.recursiveReplaceBody(self.clauseDictionary[body_part])
+                    print("resl;")
+                    print(result)
+                    new_inner_body.extend(result)
                 else:
                     new_inner_body.append(body_part)
-            new_body.append(new_inner_body)
+            if(len(new_inner_body) == 1):
+                new_body.append(new_inner_body[0])
+            else:
+                new_body.append(new_inner_body)
+        return new_body
+
+
+    def recursiveReplaceBody2(self,body):
+        new_body = [[]]
+        print("bodddy")
+        print(body)
+        dic = dict({})
+        dic["path(3,5)"] = [["ok"],["somthig"]]
+        #dic["path(3,5)"] = [["ok"]]
+        dic["path(4,5)"] = [["doubleok"]]
+        for outer_body_part in body:
+            print("BEGING")
+            print(outer_body_part)
+            if outer_body_part in dic: #self.clauseDictionary:   TODO restore this
+                body_part_clauses = dic[outer_body_part] #self.clauseDictionary[outer_body_part]   TODO restore this
+                print("bodypartclauses")
+                print(body_part_clauses)
+
+                replace_new_body = []
+                for clause in body_part_clauses:
+                    None  # TODO handle subbranching (use tree instead of list?)
+                    results = self.recursiveReplaceBody2(clause)  # TODO testing: remove these two lines
+                    for r in results:
+                        for nb in new_body:
+                            new_clause = []
+                            new_clause.extend(nb)
+                            new_clause.extend(r)
+                            replace_new_body.append(new_clause)
+                new_body = replace_new_body
+            else:
+                for nb in new_body:
+                    nb.append(outer_body_part)
+        print(new_body)
         return new_body
 
 
