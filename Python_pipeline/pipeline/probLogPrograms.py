@@ -14,6 +14,7 @@ class ProbLogProgram:
                     0.80::alarm :-   burglary, earthquake(none).
                     0.10::alarm :- \+burglary, earthquake(mild).
                     0.30::alarm :- \+burglary, earthquake(heavy).
+                    0.00::alarm :- \+burglary, earthquake(none).
 
                     0.8::calls(X) :- alarm, person(X).
                     0.1::calls(X) :- \+alarm, person(X).

@@ -6,8 +6,18 @@ from subprocess import check_output
 
 
 """
+Constraint 1: all clauses must be supplied (even the 0 probability ones)
+    #   We were wasting too much time and getting complicated code from trying to take it into consideration, since
+    #   we need to find all the combinations we have and find the clauses that are 'missing'.
+    #   This can be done by storing the clauses for each header in a dictionary and to look for all permutations (and the missing ones)
+Constraint 2: we assume in the case of multiple headers, that they are on the same line (and not spread over multiple lines)
+    #   This saves us a lot of time wrt additional parsing.  If the rules are spread out anyway, we could join them together by
+    #   looking for rules with the same clauses, effectively constructing the multi-header rule.
+"""
+
+
+"""
 Strategy:
-*) Loop over the text twice
 
 Iteration 1:
 1a) Look for atoms and store them in variable list
@@ -66,8 +76,12 @@ class CNFConverter():
                 continue
             self.parseLineFirstIteration(line, remainder_lines)
 
+        print(" ALL VARIABLES")
         for var in self.variables.values():
-            None#print(var.name +"    " + str(var.id))
+            print(var.name + "    " + str(var.id) + "     " + str(var.weight))
+        print("ALL CLAUSES")
+        for cl in self.clauses:
+            print(cl)
         self.parseSecondIteration(remainder_lines)
 
 
@@ -87,29 +101,29 @@ class CNFConverter():
             None #print(line)
         # sort clauses first
         temp_clause_dict = dict({})
-        print(remaining_lines)
-        remaining_lines.append(("path(1,5)",["path(3,5)","path(2,5)","path(2,5)"]))
+        #print(remaining_lines)
         for (header,body) in remaining_lines:
-            print("START iteration")
-            #print(header + "   " + str(body))
-            print(body)
-            #body = self.recursiveReplaceBody([body])[0]
-            body = self.recursiveReplaceBody2(body)
-
-            print("FINAL RESULT")
-            print(body)
-
-            test = itertools.product(*body)
-            print("============= PRODUCT")
-            for t in test:
-                None#print(t)
-            print("=============")
-
-            split_clauses_list = []
-            self.splitClauses(body,split_clauses_list)
+            all_clauses = self.recursiveReplaceBody2(body)
+            # all_clauses now contains a list of clauses for the given header(s)
 
             #TODO loop over the header and find the subheaders to loop for rhos
             if "::" in header:
+                subheaders = header.split(";")
+                for subheader in subheaders:
+                    (weight,name) = subheader.split("::")
+                    for clause in all_clauses:
+                        rho_name = name + "--"
+                        first = False
+                        for clause_el in clause:
+                            if not first:
+                                first = True
+                            else:
+                                rho_name += ","
+                            rho_name += clause_el
+                        rho = Variable(rho_name, self.getNewCounter(), weight)
+                        #print(rho.name + "     " + str(rho.id)  + "     " + str(rho.weight))
+
+                """
                 (weight,name) = header.split('::')
                 rho_name = header+"--"
                 first = False
@@ -124,56 +138,21 @@ class CNFConverter():
                     temp_clause_dict[name].append((body,rho))
                 else:
                     temp_clause_dict[name] = [(body,rho)]
+                """
 
-
-    #TODO clues:
-    """
-    1) first body (main call) is always of the form [[a,b,...]]
-    2) , means and for first method call (and any body parameter of len 1)
-    2b) any body parameter with len > 1 means that there are multiple clauses for a given variable and needs to branch off
-    *) possibly construct tree here
-    """
-    def recursiveReplaceBody(self,body):
-        print("body")
-        print(body)
-        new_body = []
-        for outer_body_part in body:
-            new_inner_body = []
-            for body_part in outer_body_part:
-                if body_part in self.clauseDictionary:
-                    result = self.recursiveReplaceBody(self.clauseDictionary[body_part])
-                    print("resl;")
-                    print(result)
-                    new_inner_body.extend(result)
-                else:
-                    new_inner_body.append(body_part)
-            if(len(new_inner_body) == 1):
-                new_body.append(new_inner_body[0])
             else:
-                new_body.append(new_inner_body)
-        return new_body
+                None #TODO no probability rule
 
 
     def recursiveReplaceBody2(self,body):
         new_body = [[]]
-        print("bodddy")
-        print(body)
-        dic = dict({})
-        dic["path(3,5)"] = [["ok"],["somthig"]]
-        #dic["path(3,5)"] = [["ok"]]
-        dic["path(4,5)"] = [["doubleok"]]
         for outer_body_part in body:
-            print("BEGING")
-            print(outer_body_part)
-            if outer_body_part in dic: #self.clauseDictionary:   TODO restore this
-                body_part_clauses = dic[outer_body_part] #self.clauseDictionary[outer_body_part]   TODO restore this
-                print("bodypartclauses")
-                print(body_part_clauses)
+            if outer_body_part in self.clauseDictionary:
+                body_part_clauses = self.clauseDictionary[outer_body_part]
 
                 replace_new_body = []
                 for clause in body_part_clauses:
-                    None  # TODO handle subbranching (use tree instead of list?)
-                    results = self.recursiveReplaceBody2(clause)  # TODO testing: remove these two lines
+                    results = self.recursiveReplaceBody2(clause)
                     for r in results:
                         for nb in new_body:
                             new_clause = []
@@ -184,17 +163,7 @@ class CNFConverter():
             else:
                 for nb in new_body:
                     nb.append(outer_body_part)
-        print(new_body)
         return new_body
-
-
-    def splitClauses(self,body,clauses):
-        for body_element in body:
-            if type(body_element) == list:
-                None
-            else:
-                None
-    #expected output: [[edge(1,2),edge(2,5)],[edge(1,5)]]
 
 
     def splitClauseBodyElements(self,body):
@@ -235,10 +204,14 @@ class CNFConverter():
         self.variables[v_true.name] = v_true
         self.variables[v_false.name] = v_false
         self.variables[rho.name] = rho
-        self.clauses.append(str(v_true.id) + " " + str(v_false.id))  # true lambda or false lambda
-        self.clauses.append("-" + str(v_true.id) + " -" + str(v_false.id))  # not true lambda or not false lambda
+        self.enterBinaryVariableLambdaClauses(v_true,v_false)
         self.clauses.append("-" + str(rho.id) + " " + str(v_true.id))  # not rho or true lambda
         self.clauses.append(str(rho.id) + " " + str(v_false.id))  # rho or false lambda
+
+
+    def enterBinaryVariableLambdaClauses(self,v_true,v_false):
+        self.clauses.append(str(v_true.id) + " " + str(v_false.id))  # true lambda or false lambda
+        self.clauses.append("-" + str(v_true.id) + " -" + str(v_false.id))  # not true lambda or not false lambda
 
 
     def nonBinaryVariable(self,variables):
@@ -257,14 +230,7 @@ class CNFConverter():
         for rho in rhos:
             self.variables[rho.name] = rho
 
-        lambdastring = ""
-        for l in lambdas:
-            lambdastring += str(l.id) + " "
-        self.clauses.append(lambdastring)
-
-        for i in range(len(lambdas)):
-            for j in range(i+1, len(lambdas)):
-                self.clauses.append("-" + str(lambdas[i].id) + " -" + str(lambdas[j].id))
+        self.enterNonBinaryVariableLambdaClauses(lambdas)
 
         for i in range(len(lambdas)):
             lambdastring = str(lambdas[i].id) + " "
@@ -275,9 +241,23 @@ class CNFConverter():
             self.clauses.append(lambdastring)
 
 
+    def enterNonBinaryVariableLambdaClauses(self,lambdas):
+        lambdastring = ""
+        for l in lambdas:
+            lambdastring += str(l.id) + " "
+        self.clauses.append(lambdastring)
+
+        for i in range(len(lambdas)):
+            for j in range(i + 1, len(lambdas)):
+                self.clauses.append("-" + str(lambdas[i].id) + " -" + str(lambdas[j].id))
+
+
     def parseClauseFirstIteration(self,header,body):
         if("::" in header or header == self.query):
             sub_headers = header.split(";")
+            header_var_list = []
+            print(header)
+            print(len(sub_headers))
             for h in sub_headers:
                 more_parts = h.split("::")
                 if(len(more_parts) == 2):
@@ -287,10 +267,17 @@ class CNFConverter():
                 if(name in self.variables):
                     continue
                 if name == self.query:
-                    self.variables[name] = Variable(name, self.getNewCounter(), "1 0")
+                    self.variables[name] = Variable(name, self.getNewCounter(), (1,0))
                     continue
-                self.variables[name] = Variable(name, self.getNewCounter(), "1 1")
-                self.variables["not_"+name] = Variable("not_"+name,self.getNewCounter(),"1 1")
+                self.variables[name] = Variable(name, self.getNewCounter(), (1,1))
+                if len(sub_headers) == 1:
+                    self.variables["not_"+name] = Variable("not_"+name,self.getNewCounter(),(1,1))
+                    self.enterBinaryVariableLambdaClauses(self.variables[name],self.variables["not_"+name])
+                else:
+                    header_var_list.append(self.variables[name])
+
+            self.enterNonBinaryVariableLambdaClauses(header_var_list)
+
             body = body[0:-1]
             body_parts = self.splitClauseBodyElements(body)
             return (header,body_parts)
@@ -312,8 +299,8 @@ class CNFConverter():
 
 plp = ProbLogProgram()
 cnfconverter = CNFConverter()
-model = plp.task12()[0] + plp.task12()[2][0]
-#model = plp.task11()[0] + plp.task11()[1] + plp.task11()[2][0]
+#model = plp.task12()[0] + plp.task12()[2][0]
+model = plp.task11()[0] + plp.task11()[1] + plp.task11()[2][0]
 grounded = cnfconverter.ground(model)
-cnfconverter.convert_to_cnf(grounded, plp.task12()[2][0])
+cnfconverter.convert_to_cnf(grounded, plp.task11()[2][0])
 
