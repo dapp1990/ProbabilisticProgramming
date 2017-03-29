@@ -13,6 +13,8 @@ Constraint 1: all clauses must be supplied (even the 0 probability ones)
 Constraint 2: we assume in the case of multiple headers, that they are on the same line (and not spread over multiple lines)
     #   This saves us a lot of time wrt additional parsing.  If the rules are spread out anyway, we could join them together by
     #   looking for rules with the same clauses, effectively constructing the multi-header rule.
+Constraint 3: We assume the evidence is always true.  If this is not the case, the evidence list must not just accept the names
+        of the evidence, but a tuple of (<name>,<boolean).  The getOrderedWeights method must be adjusted accordingly.
 """
 
 
@@ -76,14 +78,64 @@ class CNFConverter():
                 continue
             self.parseLineFirstIteration(line, remainder_lines)
 
+        """
         print(" ALL VARIABLES")
         for var in self.variables.values():
             print(var.name + "    " + str(var.id) + "     " + str(var.weight))
+        print("amount of clauses: " + str(len(self.clauses)))
         print("ALL CLAUSES")
         for cl in self.clauses:
             print(cl)
+        """
+
+        if self.query is not None:
+            if self.query in self.variables:
+                self.variables[self.query].weight = (1,0)
+                if "not_"+self.query in self.variables:
+                    self.variables["not_"+self.query].weight = (0,1)
+            else:
+                self.variables[self.query] = Variable(self.query,self.getNewCounter(),(1,0))
+
         self.parseSecondIteration(remainder_lines)
 
+
+        print(" ALL VARIABLES")
+        for var in self.variables.values():
+            print(var.name + "    " + str(var.id) + "     " + str(var.weight))
+        print("amount of clauses: " + str(len(self.clauses)))
+        print("ALL CLAUSES")
+        for cl in self.clauses:
+            print(cl)
+
+
+        weights = self.getOrderedWeights()
+
+        with open("created_cnf.cnf", "w") as myfile:
+            w_string = "c weights "
+            for weight in weights:
+                w_string += weight + " "
+            w_string += "\n"
+            myfile.write(w_string);
+            header_line = "p cnf " + str(len(self.variables)) + " " + str(len(self.clauses)) + "\n"
+            myfile.write(header_line)
+            for clause in self.clauses:
+                myfile.write(clause + " 0\n")
+
+
+
+
+    def getOrderedWeights(self):
+        weights = [None] * len(self.variables)
+        for var in self.variables.values():
+            weights[var.id-1] = str(var.weight[0]) + " " + str(var.weight[1])
+        for ev in self.evidence:
+            ev_obj = self.variables[ev]
+            weights[ev_obj.id-1] = "1 0"  # assuming evidence is always true
+            ev_counterpart = "not_"+ev
+            if ev_counterpart in self.variables:
+                not_ev_obj = self.variables[ev_counterpart]
+                weights[not_ev_obj.id-1] = "0 1"
+        return weights
 
 
     def parseLineFirstIteration(self, line, remainder_lines):
@@ -97,51 +149,83 @@ class CNFConverter():
 
 
     def parseSecondIteration(self, remaining_lines):
-        for line in remaining_lines:
-            None #print(line)
         # sort clauses first
-        temp_clause_dict = dict({})
-        #print(remaining_lines)
         for (header,body) in remaining_lines:
             all_clauses = self.recursiveReplaceBody2(body)
             # all_clauses now contains a list of clauses for the given header(s)
 
-            #TODO loop over the header and find the subheaders to loop for rhos
             if "::" in header:
                 subheaders = header.split(";")
-                for subheader in subheaders:
+                rhos_list = []
+                for i in range(len(subheaders)):
+                    subheader = subheaders[i]
                     (weight,name) = subheader.split("::")
-                    for clause in all_clauses:
-                        rho_name = name + "--"
-                        first = False
-                        for clause_el in clause:
-                            if not first:
-                                first = True
-                            else:
-                                rho_name += ","
-                            rho_name += clause_el
-                        rho = Variable(rho_name, self.getNewCounter(), weight)
-                        #print(rho.name + "     " + str(rho.id)  + "     " + str(rho.weight))
-
-                """
-                (weight,name) = header.split('::')
-                rho_name = header+"--"
-                first = False
-                for b in body:
-                    if not first:
-                        first = True
+                    if len(subheaders) == 1:  # binary header
+                        for clause in all_clauses:
+                            rho_name = self.getRhoName(name, clause)
+                            weight_tuple = (weight, str(round(1 - float(weight), 2)))
+                            rho = Variable(rho_name, self.getNewCounter(), weight_tuple)
+                            self.variables[rho_name] = rho
+                            c = ""
+                            for clause_el in clause:
+                                if clause_el.startswith("\+"):
+                                    clause_el = clause_el[2:]
+                                    c += "-" + str(self.variables["not_" + clause_el].id) + " "
+                                else:
+                                    c += "-" + str(self.variables[clause_el].id) + " "
+                            pos_c = c + "-" + str(rho.id) + " "
+                            pos_c += str(self.variables[name].id) + " "
+                            self.clauses.append(pos_c)
+                            neg_c = c + str(rho.id) + " "
+                            neg_c += str(self.variables["not_" + name].id) + " "
+                            self.clauses.append(neg_c)
                     else:
-                        rho_name += ","
-                    rho_name += b
-                rho = Variable(rho_name, self.getNewCounter(), weight)
-                if name in temp_clause_dict:
-                    temp_clause_dict[name].append((body,rho))
-                else:
-                    temp_clause_dict[name] = [(body,rho)]
-                """
-
-            else:
+                        for j in range(len(all_clauses)):
+                            clause = all_clauses[j]
+                            if i == len(subheaders)-1:
+                                c = ""
+                                for clause_el in clause:
+                                    if clause_el.startswith("\+"):
+                                        clause_el = clause_el[2:]
+                                        c += "-" + str(self.variables["not_" + clause_el].id) + " "
+                                    else:
+                                        c += "-" + str(self.variables[clause_el].id) + " "
+                                for k in range(j,len(rhos_list),len(all_clauses)):
+                                    c += str(rhos_list[k].id) + " "
+                                c += str(self.variables[name].id) + " "
+                                self.clauses.append(c)
+                            else:
+                                rho_name = self.getRhoName(name, clause)
+                                weight_tuple = (weight, str(round(1 - float(weight),2)))
+                                rho = Variable(rho_name, self.getNewCounter(), weight_tuple)
+                                self.variables[rho_name] = rho
+                                c = ""
+                                for clause_el in clause:
+                                    if clause_el.startswith("\+"):
+                                        clause_el = clause_el[2:]
+                                        c += "-" + str(self.variables["not_" + clause_el].id) + " "
+                                    else:
+                                        c += "-" + str(self.variables[clause_el].id) + " "
+                                for k in range(j,len(rhos_list),len(all_clauses)):
+                                    c += str(rhos_list[k].id) + " "
+                                c += "-" + str(rho.id) + " "
+                                c += str(self.variables[name].id) + " "
+                                self.clauses.append(c)
+                                rhos_list.append(rho)
+            else:  # this is a line with query header
                 None #TODO no probability rule
+
+
+    def getRhoName(self,name,clause):
+        rho_name = "rho_" + name + "--"
+        first = False
+        for clause_el in clause:
+            if not first:
+                first = True
+            else:
+                rho_name += ","
+            rho_name += clause_el
+        return rho_name
 
 
     def recursiveReplaceBody2(self,body):
@@ -200,7 +284,7 @@ class CNFConverter():
         parts = variable.split("::")
         v_true = Variable(parts[1],self.getNewCounter(),(1,1))     # true lambda variable
         v_false = Variable("not_" + parts[1], self.getNewCounter(),(1,1))  # false lambda variable
-        rho = Variable("rho_" + parts[1], self.getNewCounter(), (parts[0], str(1-float(parts[0]))))  # rho variable
+        rho = Variable("rho_" + parts[1], self.getNewCounter(), (parts[0], str(round(1-float(parts[0]),2))))  # rho variable
         self.variables[v_true.name] = v_true
         self.variables[v_false.name] = v_false
         self.variables[rho.name] = rho
@@ -224,7 +308,7 @@ class CNFConverter():
         for i in range(len(split_vars)):
             lambdas.append(Variable(split_vars[i][1],self.getNewCounter(),(1,1)))
             if(i != len(split_vars)-1):
-                rhos.append(Variable("rho_"+split_vars[i][1],self.getNewCounter(),(split_vars[i][0], str(1-float(split_vars[i][0])))))
+                rhos.append(Variable("rho_"+split_vars[i][1],self.getNewCounter(),(split_vars[i][0], str(round(1-float(split_vars[i][0]),2)))))
         for la in lambdas:
             self.variables[la.name] = la
         for rho in rhos:
@@ -238,6 +322,8 @@ class CNFConverter():
                 lambdastring += "-" + str(rhos[i].id) + " "
             for j in range(0,i):
                 lambdastring += str(rhos[j].id) + " "
+            if lambdastring == "":
+                continue
             self.clauses.append(lambdastring)
 
 
@@ -245,7 +331,8 @@ class CNFConverter():
         lambdastring = ""
         for l in lambdas:
             lambdastring += str(l.id) + " "
-        self.clauses.append(lambdastring)
+        if lambdastring != "":
+            self.clauses.append(lambdastring)
 
         for i in range(len(lambdas)):
             for j in range(i + 1, len(lambdas)):
@@ -253,11 +340,11 @@ class CNFConverter():
 
 
     def parseClauseFirstIteration(self,header,body):
-        if("::" in header or header == self.query):
+        if header == self.query:
+            return (header,body)
+        if("::" in header):
             sub_headers = header.split(";")
             header_var_list = []
-            print(header)
-            print(len(sub_headers))
             for h in sub_headers:
                 more_parts = h.split("::")
                 if(len(more_parts) == 2):
@@ -266,9 +353,9 @@ class CNFConverter():
                     name = h
                 if(name in self.variables):
                     continue
-                if name == self.query:
-                    self.variables[name] = Variable(name, self.getNewCounter(), (1,0))
-                    continue
+                #if name == self.query:
+                #    self.variables[name] = Variable(name, self.getNewCounter(), (1,0))
+                #    continue
                 self.variables[name] = Variable(name, self.getNewCounter(), (1,1))
                 if len(sub_headers) == 1:
                     self.variables["not_"+name] = Variable("not_"+name,self.getNewCounter(),(1,1))
@@ -299,8 +386,8 @@ class CNFConverter():
 
 plp = ProbLogProgram()
 cnfconverter = CNFConverter()
-#model = plp.task12()[0] + plp.task12()[2][0]
-model = plp.task11()[0] + plp.task11()[1] + plp.task11()[2][0]
+model = plp.task12()[0] + plp.task12()[2][0]
+#model = plp.task11()[0] + plp.task11()[1] + plp.task11()[2][0]
 grounded = cnfconverter.ground(model)
-cnfconverter.convert_to_cnf(grounded, plp.task11()[2][0])
+cnfconverter.convert_to_cnf(grounded, plp.task12()[2][0])
 
