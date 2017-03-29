@@ -61,9 +61,11 @@ class Pipeline:
         command_list.append(output_filename)
         h2p.main(command_list)
 
-        #query = " query(hREKG(\"LOW\"))."
-        query = " query(pRESS(\"HIGH\"))."
+        query = " query(hREKG(\"LOW\"))."
+        #query = " query(pRESS(\"HIGH\"))."
         #query = " query(kINKEDTUBE)."
+        #query = " query(sAO2(\"LOW\"))."
+        #query = " query(aRTCO2(\"LOW\"))."
         with open(output_filename, "a") as myfile:
             myfile.write(query)
 

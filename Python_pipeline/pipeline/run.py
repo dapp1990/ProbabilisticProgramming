@@ -33,7 +33,7 @@ def runTask23():
 
 
 def runBigBayesianNetwork():
-    bn = ["alarm_pruned.net"]
+    bn = ["alarm.net"]
     print("===================  problog  ===========================")
     result = p.execBayesianNetwork(bn)
     print(result)

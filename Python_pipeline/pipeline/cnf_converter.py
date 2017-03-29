@@ -215,8 +215,6 @@ class CNFConverter():
             else:  # this is a line with query header
                 query_list.extend(all_clauses)
 
-        print(self.clauses)
-        print(str(len(self.clauses)))
         clause_combos = itertools.product(*query_list)
         query_clauses = []
         for t in clause_combos:
@@ -412,6 +410,8 @@ class CNFConverter():
 
 
     def storeQuery(self, query):
+        if query is None:
+            return
         pattern = re.compile(r'\s+')
         query = re.sub(pattern, '', query)
         self.query = query[6:-2]
