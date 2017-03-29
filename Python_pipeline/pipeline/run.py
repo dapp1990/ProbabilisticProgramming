@@ -33,14 +33,14 @@ def runTask23():
 
 
 def runBigBayesianNetwork():
-    bn = ["alarm.net"]
+    bn = ["alarm_pruned.net"]
     print("===================  problog  ===========================")
     result = p.execBayesianNetwork(bn)
     print(result)
-    print("\n\n===================  miniC2D  ===========================")
-    result = p.execBayesianNetwork(bn, miniC2D_exec_path)
-    for r in result:
-        print(r)
+    #print("\n\n===================  miniC2D  ===========================")
+    #result = p.execBayesianNetwork(bn, miniC2D_exec_path)
+    #for r in result:
+     #   print(r)
 
 
 #runTask11()

@@ -54,11 +54,14 @@ class CNFConverter():
         return self.variable_counter
 
 
-    def ground(self, ProblogProgram):
-        f = open('problog.pl', 'w')
-        f.write(ProblogProgram)
-        f.close()
-        return check_output(["problog", "ground", "problog.pl"]).decode("utf-8")
+    def ground(self, ProblogProgram,file=None):
+        if file is None:
+            f = open('problog.pl', 'w')
+            f.write(ProblogProgram)
+            f.close()
+            return check_output(["problog", "ground", "problog.pl"]).decode("utf-8")
+        else:
+            return check_output(["problog", "ground", file]).decode("utf-8")
         #return check_output(["problog", "ground", "problog.pl", "--compact"]).decode("utf-8")
 
 
@@ -98,7 +101,7 @@ class CNFConverter():
 
         self.parseSecondIteration(remainder_lines)
 
-
+        """
         print(" ALL VARIABLES")
         for var in self.variables.values():
             print(var.name + "    " + str(var.id) + "     " + str(var.weight))
@@ -106,7 +109,7 @@ class CNFConverter():
         print("ALL CLAUSES")
         for cl in self.clauses:
             print(cl)
-
+        """
 
         weights = self.getOrderedWeights()
 
@@ -122,19 +125,16 @@ class CNFConverter():
                 myfile.write(clause + " 0\n")
 
 
-
-
     def getOrderedWeights(self):
+        for ev in self.evidence:
+            self.variables[ev].weight = (1,0)  # assuming evidence is always true
+            ev_counterpart = "not_"+ev
+            if ev_counterpart in self.variables:
+                self.variables[ev_counterpart].weight(0,1)
         weights = [None] * len(self.variables)
         for var in self.variables.values():
             weights[var.id-1] = str(var.weight[0]) + " " + str(var.weight[1])
-        for ev in self.evidence:
-            ev_obj = self.variables[ev]
-            weights[ev_obj.id-1] = "1 0"  # assuming evidence is always true
-            ev_counterpart = "not_"+ev
-            if ev_counterpart in self.variables:
-                not_ev_obj = self.variables[ev_counterpart]
-                weights[not_ev_obj.id-1] = "0 1"
+
         return weights
 
 
@@ -149,7 +149,7 @@ class CNFConverter():
 
 
     def parseSecondIteration(self, remaining_lines):
-        # sort clauses first
+        query_list = []
         for (header,body) in remaining_lines:
             all_clauses = self.recursiveReplaceBody2(body)
             # all_clauses now contains a list of clauses for the given header(s)
@@ -213,7 +213,34 @@ class CNFConverter():
                                 self.clauses.append(c)
                                 rhos_list.append(rho)
             else:  # this is a line with query header
-                None #TODO no probability rule
+                query_list.extend(all_clauses)
+
+        print(self.clauses)
+        print(str(len(self.clauses)))
+        clause_combos = itertools.product(*query_list)
+        query_clauses = []
+        for t in clause_combos:
+            clause_set = set({})
+            for el in t:
+                clause_set.add(el)
+            query_clauses.append(clause_set)
+
+        # create and enter all query clauses
+        for clause in query_list:
+            cl = ""
+            for el in clause:
+                cl += "-" + str(self.variables[el].id) + " "
+            cl += str(self.variables[self.query].id) + " "
+            self.clauses.append(cl)
+
+        for clause in query_clauses:
+            if len(query_clauses) == 1 and len(clause) == 0:
+                continue
+            cl = ""
+            for el in clause:
+                cl += str(self.variables[el].id) + " "
+            cl += "-" + str(self.variables[self.query].id) + " "
+            self.clauses.append(cl)
 
 
     def getRhoName(self,name,clause):
@@ -341,7 +368,9 @@ class CNFConverter():
 
     def parseClauseFirstIteration(self,header,body):
         if header == self.query:
-            return (header,body)
+            body = body[0:-1]
+            body_parts = self.splitClauseBodyElements(body)
+            return (header, body_parts)
         if("::" in header):
             sub_headers = header.split(";")
             header_var_list = []
@@ -377,17 +406,25 @@ class CNFConverter():
 
 
     def storeEvidence(self, evidence):
+        pattern = re.compile(r'\s+')
+        evidence = re.sub(pattern, '', evidence)
         self.evidence.append(evidence[9:-2])
 
 
     def storeQuery(self, query):
+        pattern = re.compile(r'\s+')
+        query = re.sub(pattern, '', query)
         self.query = query[6:-2]
 
 
-plp = ProbLogProgram()
-cnfconverter = CNFConverter()
-model = plp.task12()[0] + plp.task12()[2][0]
-#model = plp.task11()[0] + plp.task11()[1] + plp.task11()[2][0]
-grounded = cnfconverter.ground(model)
-cnfconverter.convert_to_cnf(grounded, plp.task12()[2][0])
 
+def test():
+    plp = ProbLogProgram()
+    cnfconverter = CNFConverter()
+    model = plp.task12()[0] + plp.task12()[2][0]
+    #model = plp.task11()[0] + plp.task11()[1] + plp.task11()[2][0]
+    grounded = cnfconverter.ground(model)
+    cnfconverter.convert_to_cnf(grounded, plp.task12()[2][0])
+
+
+#test()
