@@ -243,4 +243,4 @@
 0.01::hRBP("LOW"); 0.01::hRBP("NORMAL"); 0.98::hRBP("HIGH") :- \+eRRLOWOUTPUT, hR("HIGH").
 0.98::hRBP("LOW"); 0.01::hRBP("NORMAL"); 0.01::hRBP("HIGH") :- eRRLOWOUTPUT, hR("LOW").
 0.3::hRBP("LOW"); 0.4::hRBP("NORMAL"); 0.3::hRBP("HIGH") :- eRRLOWOUTPUT, hR("NORMAL").
-0.4::hRBP("LOW"); 0.59::hRBP("NORMAL"); 0.01::hRBP("HIGH") :- \+eRRLOWOUTPUT, hR("LOW").
+0.4::hRBP("LOW"); 0.59::hRBP("NORMAL"); 0.01::hRBP("HIGH") :- \+eRRLOWOUTPUT, hR("LOW"). query(hREKG("LOW")).

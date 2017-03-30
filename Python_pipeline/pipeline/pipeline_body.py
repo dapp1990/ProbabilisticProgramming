@@ -1,80 +1,91 @@
 import problog as pl
-import pipeline.hugin2problog as h2p
 from subprocess import check_output
 import pipeline.cnf_converter as cnfconv
 
 
 class Pipeline:
 
-    def continue_pipeline(self, plProgram, inferenceEngine):
-        lf = pl.formula.LogicFormula.create_from(plProgram)  # ground into logic formula
-
+    def continue_pipeline(self, probLogProgram, inferenceEngine,outputFileName=None):
         if inferenceEngine is None:  # run all queries at once with Problog
+            p = probLogProgram[0]
+            if (probLogProgram[1] is not None):
+                p += probLogProgram[1]
+            if probLogProgram[2] is not None:
+                for query in probLogProgram[2]:
+                    p += query + "\n"
+            plProgram = pl.program.PrologString(p)
+            lf = pl.formula.LogicFormula.create_from(plProgram)  # ground into logic formula
             cnf = pl.cnf_formula.CNF.create_from(lf)  # get CNF
             nnf = pl.nnf_formula.NNF.create_from(cnf)  # transform to nnf
             return nnf.evaluate()  # compute conditional probabilities
         else:  # run queries one at a time for other inference engines
-            None
-            """
-            result = []
-            for query in q:
-                print("-----------------------------")
-                print(query)
-                lf.clear_queries()
-                lf.add_query(query[0],query[1])
-                cnf = pl.cnf_formula.CNF.create_from(lf)  # get CNF
+            if outputFileName is None:  # create outpufilename (containing model + evidence)
+                outputFileName = "problog.pl"
+                with open(outputFileName, "w") as myfile:
+                    myfile.write(probLogProgram[0])
+                    if(probLogProgram[1] is not None):
+                        myfile.write(probLogProgram[1])
+                    myfile.close()
 
-                #text_file = open("temp.cnf", "w")
-                #text_file.write(cnf.to_dimacs(weighted=True))
-                #text_file.close()
-                print("-HEEEEEEEEEEEEERE")
-                print(cnf.get_weights())
-
-
-                self.createFile(cnf)
-                #print(lf)
-                output = check_output([inferenceEngine, "-c", "temp.cnf", "-W", "--vtree_type", "i", "--vtree_method", "2"])
-                something = output.decode("utf-8")
-                print(something)
-                result.append(something)
-            return result
-            """
+            index = 1
+            results = []
+            for query in probLogProgram[2]:
+                cnfconverter = cnfconv.CNFConverter()
+                new_output_filename = "query" + str(index) + outputFileName
+                index += 1
+                with open(new_output_filename, "w") as writefile:
+                    with open(outputFileName, "r") as readfile:
+                        for line in readfile.readlines():
+                            writefile.write(line)
+                        readfile.close()
+                    writefile.write(query)
+                    writefile.close()
+                grounded = cnfconverter.ground(None, new_output_filename)
+                if probLogProgram[1] is None:
+                    cnfconverter.convert_to_cnf(grounded, query, "output_"+new_output_filename, True)
+                    output = check_output([inferenceEngine, "-c", "output_"+new_output_filename,
+                                           "-W"])  # , "--vtree_type", "i", "--vtree_method", "4"])
+                    print(output.decode("utf-8"))
+                    results.append(output.decode("utf-8"))
+                else:
+                    cnfconverter.convert_to_cnf(grounded, query, "output_noquery_" + new_output_filename, False)
+                    output_noquery = check_output([inferenceEngine, "-c", "output_noquery_" + new_output_filename,
+                                           "-W"])  # , "--vtree_type", "i", "--vtree_method", "4"])
+                    cnfconverter = cnfconv.CNFConverter()
+                    cnfconverter.convert_to_cnf(grounded, query, "output_" + new_output_filename, True)
+                    output = check_output([inferenceEngine, "-c", "output_" + new_output_filename,
+                                           "-W"])
+                    print(output_noquery.decode("utf-8"))
+                    print(output.decode("utf-8"))
+                    results.append(output_noquery.decode("utf-8"))
+                    results.append(output.decode("utf-8"))
+            return results
 
 
     # Enter a ProbLog program as a tuple: (model, evidence, queries)
     def execProbLogModel(self, probLogProgram, inferenceEngine=None):
-        p = probLogProgram[0]
-        if (probLogProgram[1] is not None):
-            p += probLogProgram[1]
-        if probLogProgram[2] is not None:
-            for query in probLogProgram[2]:
-                p+= query + "\n"
-        return self.continue_pipeline(pl.program.PrologString(p), inferenceEngine)
+        return self.continue_pipeline(probLogProgram, inferenceEngine)
 
 
     # Enter the relative path to a Bayesian network file (.net extension)
-    def execBayesianNetwork(self, bayesianNetwork, inferenceEngine=None):
-        output_filename = "output_" + bayesianNetwork[0]  # output to "output_<input_file_name>"
-        command_list = []
-        command_list.append(bayesianNetwork[0])
-        command_list.append("-o")
-        command_list.append(output_filename)
-        h2p.main(command_list)
+    def execBayesianNetwork(self, output_filename, inferenceEngine=None):
 
-        query = " query(hREKG(\"LOW\"))."
+
+        queries = [" query(hREKG(\"LOW\")).", " query(pRESS(\"HIGH\")).", " query(aRTCO2(\"LOW\"))."]
+        #queries = [" query(pRESS(\"HIGH\")).", " query(aRTCO2(\"LOW\")).", " query(sAO2(\"LOW\"))."]
+        #query = " query(hREKG(\"LOW\"))."
         #query = " query(pRESS(\"HIGH\"))."
         #query = " query(kINKEDTUBE)."
         #query = " query(sAO2(\"LOW\"))."
         #query = " query(aRTCO2(\"LOW\"))."
-        with open(output_filename, "a") as myfile:
-            myfile.write(query)
 
-        cnfconverter = cnfconv.CNFConverter()
-        grounded = cnfconverter.ground(None,output_filename)
-        cnfconverter.convert_to_cnf(grounded, query)
+        problogProgram = ""
+        with open(output_filename, "r") as myfile:
+            for line in myfile.readlines():
+                problogProgram += line
+                myfile.close()
 
-
-        return self.continue_pipeline(pl.program.PrologFile(output_filename), inferenceEngine)
+        return self.continue_pipeline((problogProgram, None, queries), inferenceEngine, output_filename)
 
 
     # Create a temporal cnf file which is used by minic2d

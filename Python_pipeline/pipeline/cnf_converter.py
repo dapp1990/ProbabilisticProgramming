@@ -6,6 +6,18 @@ from subprocess import check_output
 
 
 """
+if evidence is empty:
+   ground
+   compute probability in miniC2D with query
+else:
+   ground
+   res1 = compute probability in miniC2D with query
+   res2 = compute probability in miniC2D without query
+   res = res1/res2
+"""
+
+
+"""
 Constraint 1: all clauses must be supplied (even the 0 probability ones)
     #   We were wasting too much time and getting complicated code from trying to take it into consideration, since
     #   we need to find all the combinations we have and find the clauses that are 'missing'.
@@ -15,6 +27,13 @@ Constraint 2: we assume in the case of multiple headers, that they are on the sa
     #   looking for rules with the same clauses, effectively constructing the multi-header rule.
 Constraint 3: We assume the evidence is always true.  If this is not the case, the evidence list must not just accept the names
         of the evidence, but a tuple of (<name>,<boolean).  The getOrderedWeights method must be adjusted accordingly.
+Constraint 4: Queries from task23 must be grounded before we can loop over them, but we can only verify one query at a time.  So we ground
+        the program, extract all the queries and store them in a list. Then we replace the query line with one of the stored queries at a
+        time. This will means that the queries need to be manually stored every time the program changes, but we're doing this because
+        we lack time to streamline everything.
+Constraint 5: We save on variables by replacing occurrences of rules with headers with prob = 1 into the body of other rules. This
+        approach works fine for task12, but not for task23 where we still need those rules (in case they don't appear in the body
+        of other rules)
 """
 
 
@@ -65,7 +84,7 @@ class CNFConverter():
         #return check_output(["problog", "ground", "problog.pl", "--compact"]).decode("utf-8")
 
 
-    def convert_to_cnf(self, groundedProgr, query):
+    def convert_to_cnf(self, groundedProgr, query, destinationfile, activateQuery=True):
         self.storeQuery(query)
 
         # first iteration
@@ -93,11 +112,15 @@ class CNFConverter():
 
         if self.query is not None:
             if self.query in self.variables:
-                self.variables[self.query].weight = (1,0)
-                if "not_"+self.query in self.variables:
-                    self.variables["not_"+self.query].weight = (0,1)
+                if activateQuery:
+                    self.variables[self.query].weight = (1,0)
+                    if "not_"+self.query in self.variables:
+                        self.variables["not_"+self.query].weight = (0,1)
             else:
-                self.variables[self.query] = Variable(self.query,self.getNewCounter(),(1,0))
+                if activateQuery:
+                    self.variables[self.query] = Variable(self.query,self.getNewCounter(),(1,0))
+                else:
+                    self.variables[self.query] = Variable(self.query, self.getNewCounter(), (1, 1))
 
         self.parseSecondIteration(remainder_lines)
 
@@ -113,7 +136,7 @@ class CNFConverter():
 
         weights = self.getOrderedWeights()
 
-        with open("created_cnf.cnf", "w") as myfile:
+        with open(destinationfile, "w") as myfile:
             w_string = "c weights "
             for weight in weights:
                 w_string += weight + " "
@@ -130,7 +153,7 @@ class CNFConverter():
             self.variables[ev].weight = (1,0)  # assuming evidence is always true
             ev_counterpart = "not_"+ev
             if ev_counterpart in self.variables:
-                self.variables[ev_counterpart].weight(0,1)
+                self.variables[ev_counterpart].weight = (0,1)
         weights = [None] * len(self.variables)
         for var in self.variables.values():
             weights[var.id-1] = str(var.weight[0]) + " " + str(var.weight[1])
@@ -424,7 +447,7 @@ def test():
     model = plp.task12()[0] + plp.task12()[2][0]
     #model = plp.task11()[0] + plp.task11()[1] + plp.task11()[2][0]
     grounded = cnfconverter.ground(model)
-    cnfconverter.convert_to_cnf(grounded, plp.task12()[2][0])
+    cnfconverter.convert_to_cnf(grounded, plp.task12()[2][0], "created_cnf.cnf")
 
 
 #test()

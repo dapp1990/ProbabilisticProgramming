@@ -11,4 +11,4 @@
                     path(X,Y) :- edge(X,Z),
                                  Y \== Z,
                              path(Z,Y).
-                
+                query(path(1,6)).

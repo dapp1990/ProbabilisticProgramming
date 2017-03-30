@@ -23,7 +23,7 @@ class ProbLogProgram:
                         evidence(calls(john),true).
                         evidence(calls(mary),true).
                    """
-        queries = ["query(burglary).", "query(earthquake(_))."]
+        queries = ["query(burglary).", "query(earthquake(none)).", "query(earthquake(mild)).", "query(earthquake(heavy))."]
         return (model, evidence, queries)
 
 
