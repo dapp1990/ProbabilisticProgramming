@@ -1,34 +1,35 @@
 \section{Build an Inference Engine: Pipeline}
 
-The pipeline has been implemented in Python3. The README is in the same directory as the code and will explain how the code should be run. Some computations have been carried out in miniC2D. The results are shown in tables~\ref{table:results-task11} to~\ref{table:results-bayesian}.
+The pipeline has been implemented in Python3. The README is in the same directory as the code and will explain how the code should be run. The WMC computation has been carried out in miniC2D whereas gvpr (graph pattern scanning and processing language) has been used to obtain the vtree statistics using de dot file created by miniC2D. The results are shown in tables~\ref{table:results-task11} to~\ref{table:results-bayesian}.
 \\\\
-We use ENC2, as specified in the first task, as our encoding. We chose this because it minimizes the amount of variables needed to get a full CNF. The encoding as we implemented it, is not always very efficient. In the case of task 12 we have more variables than actually needed. Table~\ref{table:results-task12} shows that we need 16 variables and 28 clauses to represent the CNF for \texttt{query(path15)}. In the CNF folder where, where we manually created the CNFs, we only need 6 variables and 8 clauses. The difference can be explained as we create two lambda variables and a rho variable for every atom in ENC2. However, edges are never used in their negation in clauses. This means that there are no rules that express \texttt{\\+edge(1,3)} for example. The lambda that expresses \textit{not} an edge and the corresponding $\rho$ are actually useless. A possible way to fix this is to scan over all the rules and ensure that the negation never occurs (or that only the negation occurs).
+We used ENC2, as specified in the first task, as our encoding. We chose this because it minimizes the amount of variables needed to get a full CNF. The encoding, as we implemented it, is not always very efficient. In the case of task 1.2 we have more variables than actually needed. Table~\ref{table:results-task12} shows that we need 16 variables and 28 clauses to represent the CNF for \texttt{query(path15)}. In the CNF folder where, where we manually created the CNFs, we only need 6 variables and 8 clauses. The difference can be explained as we created two lambda variables and a rho variable for every atom in ENC2. However, edges are never used in their negation in clauses. This means that there are no rules that express \texttt{\\+edge(1,3)} for example. The lambda that expresses \textit{not} an edge and the corresponding $\rho$ are actually useless. A possible way to fix this is to scan over all the rules and ensure that the negation never occurs (or that only the negation occurs).
 
 \begin{table}[h]
 \centering
 \caption{Results task11}
 \label{table:results-task11}
-\begin{tabular}{l|l|l|l|l|l|l|l|l|l|l|l}
-\textbf{query} & \textbf{probability} & \textbf{count time (s)} & \textbf{vtree time (s)} & \textbf{CNF time (s)} & \textbf{\#vars CNF} & \textbf{\#clauses CNF} & \textbf{depth vtree} & \textbf{branching factor vtree} & \textbf{\#edges circuit} & \textbf{\#nodes circuit} & \textbf{total runtime (s)} \\ \hline
-burglary &  $\frac{0.364}{0.372} = 0.98$ & 0.006 & 0.001  &  0.000 &  24 & 37 &   &  &  &  &  0.021 \\
-e(none) & $\frac{0.290}{0.371} = 0.78$  & 0.005 & 0.000 &  0.000 & 24 & 37 &  &    &   &  & 0.020
-\end{tabular}
+\resizebox{\textwidth}{!}{\begin{tabular}{l|l|l|l|l|l|l|l|l|l|l|l}
+\textbf{query} & \textbf{probability}         & \textbf{count time (s)} & \textbf{vtree time (s)} & \textbf{CNF time (s)} & \textbf{\#vars CNF} & \textbf{\#clauses CNF} & \textbf{depth vtree} & \textbf{branching factor vtree} & \textbf{\#edges circuit} & \textbf{\#nodes circuit} & \textbf{total runtime (s)} \\ \hline
+burglary       & $\frac{0.364}{0.372} = 0.98$ & 0.006                   & 0.001                   & 0.000                 & 24                  & 37                     & 13                   & 2                               & 28                       & 29                       & 0.021                      \\ \hline
+e(none)        & $\frac{0.290}{0.371} = 0.78$ & 0.005                   & 0.000                   & 0.000                 & 24                  & 37                     & 13                   & 2                               & 28                       & 29                       & 0.020                     
+\end{tabular}}
 \end{table}
 
-For tasks with no evidence, we only need to compute the model with the query. The number of counted models equals the probability of the query. If there is evidence present, then we need to perform two computations: one with the query and one without the query. Dividing the joint probability (models with the query) by the probability of the conditionals (models without the query) equals the conditional probability we are looking for.
+
+For tasks with no evidence, we only need to compute the model with the query. The number of counted models equals the probability of the query. If there is evidence present, then we need to perform two computations: one with the query and one without the query. Dividing the joint probability (query and evidence P(Q,E)) by the joint probability of the conditionals (P(E)) equals the conditional probability we are looking for.
 
 \begin{table}[h]
 \centering
 \caption{Results task12}
 \label{table:results-task12}
-\begin{tabular}{l|l|l|l|l|l|l|l|l|l|l|l}
+\resizebox{\textwidth}{!}{\begin{tabular}{l|l|l|l|l|l|l|l|l|l|l|l}
 \textbf{query} & \textbf{probability} & \textbf{count time (s)} & \textbf{vtree time (s)} & \textbf{CNF time (s)} & \textbf{\#vars CNF} & \textbf{\#clauses CNF} & \textbf{depth vtree} & \textbf{branching factor vtree} & \textbf{\#edges circuit} & \textbf{\#nodes circuit} & \textbf{total runtime (s)} \\ \hline
-path15 &  0.258  & 0.000 & 0.000 & 0.000 & 16 & 28 &  &  &  &   &  0.015 \\
-path16 & 0.217 &  0.002  & 0.001 & 0.000 & 22 & 55 &  &  &  &   &  0.017
-\end{tabular}
+path15         & 0.258                & 0.000                   & 0.000                   & 0.000                 & 16                  & 28                     & 10                   & 2                               & 19                       & 20                       & 0.015                      \\  \hline
+path16         & 0.217                & 0.002                   & 0.001                   & 0.000                 & 22                  & 55                     & 13                   & 2                               & 27                       & 28                       & 0.017                     
+\end{tabular}}
 \end{table}
 
-The results of the big Bayesian network are shown in table~\ref{table:results-bayesian}. We have definitely succeeded in topping problog in terms of computational speed. One of the leaf nodes at the bottom of the graph is \texttt{hREKG}. This node needed about 10 to 15 minutes to compute in problog, but it was computed by miniC2D in 100 milliseconds on average. Our encoding does not suffer from the overload in variables as in task 12 because each atom occurs both in its normal form and its negation in the rule bodies. However, the computed probabilities seem to fluctuate around the result that problog achieves. The computed answer of miniC2D differs every time we run it, but it approximates the correct answer quite closely. We do not know the exact reason for this, but we have some speculations:
+The results of the big Bayesian network are shown in table~\ref{table:results-bayesian}. We have definitely succeeded in topping problog in terms of computational speed. One of the leaf nodes at the bottom of the graph is \texttt{hREKG}. This node needed about 10 to 15 minutes to compute in problog, but it was computed by miniC2D in 100 milliseconds on average. Our encoding does not suffer from the overload in variables as in task 1.2 because each atom occurs both in its normal form and its negation in the rule bodies. However, the computed probabilities seem to fluctuate around the result that problog achieves. The computed answer of miniC2D differs every time we run it, but it approximates the correct answer quite closely. We do not know the exact reason for this, but we have some speculations:
 \begin{itemize}
 \item MiniC2D uses rounding frequently for computed intermediate results. The errors cascade and become larger when the amount of variables increases enough.
 \item We use dictionaries and sets in our program to map logic and remove duplicate elements. This may cause the ordering in which clauses and variables get selected to become random. In conjunction with the rounding problem above, this means that the errors do vary indeed.
@@ -39,13 +40,13 @@ The results of the big Bayesian network are shown in table~\ref{table:results-ba
 \centering
 \caption{Results task Bayesian network}
 \label{table:results-bayesian}
-\begin{tabular}{l|l|l|l|l|l|l|l|l|l|l|l}
-\textbf{query} & \textbf{probability} & \textbf{count time (s)} & \textbf{vtree time (s)} & \textbf{CNF time (s)} & \textbf{\#vars CNF} & \textbf{\#clauses CNF} & \textbf{depth vtree} & \textbf{branching factor vtree} & \textbf{\#edges circuit} & \textbf{\#nodes circuit} & \textbf{total runtime (s)} \\ \hline
-hREKG(LOW) & 0.178  &  0.039  & 0.015  & 0.001  & 319 & 482      &   &   &    &     & 0.070  \\
-pRESS(HIGH) &  0.484  &  0.008  & 0.003 & 0.000  & 83 & 130  &  &   &       &    &   0.026 \\
-aRTCO2(LOW) &  0.193 &  0.023 & 0.006 & 0.000  & 179 & 248 &  &  &  &  & 0.045  \\
-sAO2(LOW) & 0.770  & 0.027 & 0.007 & 0.000 & 214 & 302 &   &  &  &  &  0.050
-\end{tabular}
+\resizebox{\textwidth}{!}{\begin{tabular}{l|l|l|l|l|l|l|l|l|l|l|l}
+query       & \textbf{probability} & \textbf{count time (s)} & \textbf{vtree time (s)} & \textbf{CNF time (s)} & \textbf{\#vars CNF} & \textbf{\#clauses CNF} & \textbf{depth vtree} & \textbf{branching factor vtree} & \textbf{\#edges circuit} & \textbf{\#nodes circuit} & \textbf{total runtime (s)} \\ \hline
+hREKG(LOW)  & 0.178                & 0.039                   & 0.015                   & 0.001                 & 319                 & 482                    & 32                   & 2                               & 420                      & 421                      & 0.070                      \\ \hline
+pRESS(HIGH) & 0.484                & 0.008                   & 0.003                   & 0.000                 & 83                  & 130                    & 22                   & 2                               & 104                      & 105                      & 0.026                      \\ \hline
+aRTCO2(LOW) & 0.193                & 0.023                   & 0.006                   & 0.000                 & 179                 & 248                    & 28                   & 2                               & 228                      & 229                      & 0.045                      \\ \hline
+sAO2(LOW)   & 0.770                & 0.027                   & 0.007                   & 0.000                 & 214                 & 302                    & 30                   & 2                               & 274                      & 275                      & 0.050                     
+\end{tabular}}
 \end{table}
 
 We have been going on a wrong trail for a very long time, which caused us to lose precious time.  For $\approx$60 hours we have been dabbling in the problog source code to figure out a way to generate a CNF that fits our encoding. We got on the right track after the discussion the week before the deadline. Due to this, we had to implement some constraints as a shortage of time did not allow us to streamline everything:
