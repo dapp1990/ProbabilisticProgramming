@@ -30,7 +30,7 @@ def runTask12():
 
 
 def runTask23():
-    None  # this does not work properly
+    print("Task 23 does not work properly for our implementation.")  # this does not work properly
     # runTask(plp.task23())
 
 
@@ -43,8 +43,8 @@ def runBigBayesianNetwork():
     command_list.append(output_filename)
     h2p.main(command_list)
     print("===================  problog  ===========================")
-    #result = p.execBayesianNetwork(output_filename)
-    #print(result)  # contains conditional probabilities
+    result = p.execBayesianNetwork(output_filename)
+    print(result)  # contains conditional probabilities
     print("\n\n===================  miniC2D  ===========================")
     result = p.execBayesianNetwork(output_filename, miniC2D_exec_path)
     for r in result:

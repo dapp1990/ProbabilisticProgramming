@@ -71,8 +71,8 @@ class Pipeline:
     def execBayesianNetwork(self, output_filename, inferenceEngine=None):
 
 
-        queries = [" query(hREKG(\"LOW\")).", " query(pRESS(\"HIGH\")).", " query(aRTCO2(\"LOW\"))."]
-        #queries = [" query(pRESS(\"HIGH\")).", " query(aRTCO2(\"LOW\")).", " query(sAO2(\"LOW\"))."]
+        #queries = [" query(hREKG(\"LOW\")).", " query(pRESS(\"HIGH\")).", " query(aRTCO2(\"LOW\"))."]
+        queries = [" query(pRESS(\"HIGH\")).", " query(aRTCO2(\"LOW\")).", " query(sAO2(\"LOW\"))."]
         #query = " query(hREKG(\"LOW\"))."
         #query = " query(pRESS(\"HIGH\"))."
         #query = " query(kINKEDTUBE)."

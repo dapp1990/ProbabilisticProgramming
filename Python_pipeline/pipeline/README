@@ -1,0 +1,7 @@
+The CNFs we created manually are in the CNFs package.
+
+The pipeline package contains the logic and execution files. To run the tasks, go to pipeline/run.py and select a method to execute (runTask11(), runTask12(), ...). Running the tasks will execute problog first, then the same tasks for miniC2D. Task 23 does not work properly, as will be mentioned in the report.  The miniC2D executable path needs to be entered at the top of run.py.  
+
+The programs for tasks 11, 12 and 23 are stored in probLogPrograms.py. The various parameters (and queries) can be adjusted here.
+
+The bayesian network is stored in alarm.net. The problog equivalent of the bayesian network is stored in output_alarm.net.  The queries are selected in pipeline/pipeline_body.py/execBayesianNetwork(...).  Adjust the variable 'queries' to contain a list of desired queries.
