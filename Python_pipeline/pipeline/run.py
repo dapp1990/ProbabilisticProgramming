@@ -53,5 +53,5 @@ def runBigBayesianNetwork():
 
 
 #runTask11()
-runTask12()
-#runBigBayesianNetwork()
+#runTask12()
+runBigBayesianNetwork()
