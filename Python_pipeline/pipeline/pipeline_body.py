@@ -45,8 +45,7 @@ class Pipeline:
                     cnfconverter.convert_to_cnf(grounded, query, "output_"+new_output_filename, True)
                     output = check_output([inferenceEngine, "-c", "output_"+new_output_filename,
                                            "-W"])  # , "--vtree_type", "i", "--vtree_method", "4"])
-                    print(output.decode("utf-8"))
-                    results.append(output.decode("utf-8"))
+                    results.append((query, output.decode("utf-8")))
                 else:
                     cnfconverter.convert_to_cnf(grounded, query, "output_noquery_" + new_output_filename, False)
                     output_noquery = check_output([inferenceEngine, "-c", "output_noquery_" + new_output_filename,
@@ -55,10 +54,8 @@ class Pipeline:
                     cnfconverter.convert_to_cnf(grounded, query, "output_" + new_output_filename, True)
                     output = check_output([inferenceEngine, "-c", "output_" + new_output_filename,
                                            "-W"])
-                    print(output_noquery.decode("utf-8"))
-                    print(output.decode("utf-8"))
-                    results.append(output_noquery.decode("utf-8"))
-                    results.append(output.decode("utf-8"))
+                    results.append((query, output.decode("utf-8")))
+                    results.append(("no query", output_noquery.decode("utf-8")))
             return results
 
 
@@ -71,8 +68,11 @@ class Pipeline:
     def execBayesianNetwork(self, output_filename, inferenceEngine=None):
 
 
+        # NOTE: " query(hREKG(\"LOW\"))." takes a long time to compute on problog
         #queries = [" query(hREKG(\"LOW\")).", " query(pRESS(\"HIGH\")).", " query(aRTCO2(\"LOW\"))."]
-        queries = [" query(pRESS(\"HIGH\")).", " query(aRTCO2(\"LOW\")).", " query(sAO2(\"LOW\"))."]
+        #queries = [" query(pRESS(\"HIGH\")).", " query(aRTCO2(\"LOW\")).", " query(sAO2(\"LOW\"))."]
+        queries = [" query(hREKG(\"LOW\")).", " query(pRESS(\"HIGH\")).", " query(aRTCO2(\"LOW\")).",
+                   " query(sAO2(\"LOW\"))."]
         #query = " query(hREKG(\"LOW\"))."
         #query = " query(pRESS(\"HIGH\"))."
         #query = " query(kINKEDTUBE)."

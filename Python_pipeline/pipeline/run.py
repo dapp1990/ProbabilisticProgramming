@@ -17,8 +17,8 @@ def runTask(task):
     print("\n\n===================  miniC2D  ===========================")
     result = p.execProbLogModel(task, miniC2D_exec_path)
     for r in result:
-        print(r)
-        None
+        print(r[0])
+        print(r[1])
 
 
 def runTask11():
@@ -43,14 +43,15 @@ def runBigBayesianNetwork():
     command_list.append(output_filename)
     h2p.main(command_list)
     print("===================  problog  ===========================")
-    result = p.execBayesianNetwork(output_filename)
-    print(result)  # contains conditional probabilities
+    #result = p.execBayesianNetwork(output_filename)
+    #print(result)  # contains conditional probabilities
     print("\n\n===================  miniC2D  ===========================")
     result = p.execBayesianNetwork(output_filename, miniC2D_exec_path)
     for r in result:
-        print(r)
+        print(r[0])
+        print(r[1])
 
 
 #runTask11()
-#runTask12()
-runBigBayesianNetwork()
+runTask12()
+#runBigBayesianNetwork()

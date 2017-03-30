@@ -244,3 +244,4 @@
 0.01::bP("LOW"); 0.09::bP("NORMAL"); 0.9::bP("HIGH") :- cO("HIGH"), tPR("HIGH").
 0.3::bP("LOW"); 0.6::bP("NORMAL"); 0.1::bP("HIGH") :- cO("LOW"), tPR("HIGH").
 0.05::bP("LOW"); 0.4::bP("NORMAL"); 0.55::bP("HIGH") :- cO("NORMAL"), tPR("HIGH").
+ query(sAO2("LOW")).
