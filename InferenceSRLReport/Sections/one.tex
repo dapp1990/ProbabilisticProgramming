@@ -89,15 +89,15 @@ Table~\ref{table:comptask1enc1} to table~\ref{table:comptask2} show the computat
 
 \subsection{Knowledge Compilation}\label{subsec:knowledgecompilation}
 
-We used \textbf{MiniC2D} knowledge compiler a as tools for this section.
+We used \textbf{MiniC2D} knowledge compiler as tool for this section.
 \\[2ex]
 We tested different scenarios for the CNFs of tasks 1.1 and 1.2 (with evidence, no evidence and some queries). Likewise, we tested the CNFs constructed in tasks 1.3 separately, considering the grounded queries for path(1,5) and path(1,6).
 \\[2ex]
-Table~\ref{vtree_11_enc1_no_evidence} to table~\ref{vtree_12_srl2cnf_query_path16} show the results of the different experiments. According with the results, the best heuristic that gave us the most compact circuit was the \testit{natural elimination order} method with \testit{incidence graph} type, even though \testit{natural elimination order} method with \testit{primal graph} type showed the best performs in terms of time.
+Table~\ref{vtree_11_enc1_no_evidence} to table~\ref{vtree_12_srl2cnf_query_path16} show the results of the different experiments. According with the results, the best heuristic that gave us the most compact circuit was the \textit{natural elimination order} method with \textit{incidence graph} type, even though \textit{natural elimination order} method with \textit{primal graph} type showed the best performs in terms of time.
 \\[2ex]
-The CNF of tasks 1.3 (tables ~\ref{vtree_12_srl2cnf_query_path15} and ~\ref{vtree_12_srl2cnf_query_path16}) presented difference results, \textit{natural elimination order} was the worst.
+In contrast, the CNFs of tasks 1.3 (tables ~\ref{vtree_12_srl2cnf_query_path15} and ~\ref{vtree_12_srl2cnf_query_path16}) presented difference results, \textit{natural elimination order} was the worst.
 \\[2ex]
-Furthermore, we compared the different vtree parameters in the grounded CNF given by the pipeline described in section II; results are shown in table ~\ref{vtree_network_query_hrekg}. We obtained similar result than CNF of tasks 1.3, \textit{natural elimination order} showed the widest circuits. \textit{Natural elimination order} was even worst when it was used on combination with \textit{incident graph}. We could not fetch a result after 5 minutes of waiting.
+Furthermore, we compared the different vtree parameters on the grounded CNF given by the pipeline described in section II; results are shown in table ~\ref{vtree_network_query_hrekg}. We obtained similar result than CNFs of tasks 1.3, \textit{natural elimination order} showed the widest circuits. \textit{Natural elimination order} was even worst when it was used on combination with \textit{incident graph}. We could not fetch a result after 5 minutes of waiting.
 \\[2ex]
 We concluded that the grounding process is an important factor to choose wisely the proper configuration for the creation of the vtrees. Additionally, we concluded that \textit{incident graph} performs better than \textit{primal graph} when it is used on combination with \textit{hypergraph with fixed balance factor} method. This assumption highly relies on the results of table~\ref{vtree_network_query_hrekg} since the other CNFs show a slightly variation on the vtree circuit.
 \\[2ex]
